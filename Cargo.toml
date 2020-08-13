@@ -1,9 +1,10 @@
 [package]
 name = "opcalc"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["vic-lee <viclee@nyu.edu>"]
 edition = "2018"
 license = "MIT"
+repository = "https://github.com/mfg-nyu/opcalc"
 description = "An easy-to-use black-scholes option calculator. Made for JS, built in Rust."
 
 [lib]
