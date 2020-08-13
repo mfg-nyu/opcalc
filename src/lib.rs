@@ -31,15 +31,15 @@ pub enum OptionType {
 }
 
 struct OptionTimeDefinition {
-    time_curr: i64,
-    time_maturity: i64,
+    time_curr: u32,
+    time_maturity: u32,
 }
 
 #[wasm_bindgen]
 #[derive(Copy, Clone)]
 pub struct BSOption {
-    time_curr: i64,
-    time_maturity: i64,
+    time_curr: u32,
+    time_maturity: u32,
     time_to_maturity: f64,
     asset_price: f64,
     strike: f64,
@@ -51,8 +51,8 @@ pub struct BSOption {
 #[wasm_bindgen]
 impl BSOption {
     pub fn new(
-        time_curr: i64,
-        time_maturity: i64,
+        time_curr: u32,
+        time_maturity: u32,
         asset_price: f64,
         strike: f64,
         interest: f64,
@@ -122,11 +122,11 @@ impl BSOption {
 
     /// Option int·rinsic property getters
 
-    pub fn time_curr(&self) -> i64 {
+    pub fn time_curr(&self) -> u32 {
         return self.time_curr;
     }
 
-    pub fn time_maturity(&self) -> i64 {
+    pub fn time_maturity(&self) -> u32 {
         return self.time_maturity;
     }
 
@@ -152,7 +152,7 @@ impl BSOption {
 
     /// Option intrinsic property setters
 
-    pub fn set_time_curr(&mut self, new_time_curr: i64) {
+    pub fn set_time_curr(&mut self, new_time_curr: u32) {
         self.time_curr = new_time_curr;
         self.time_to_maturity = Self::calc_time_to_maturity(OptionTimeDefinition {
             time_maturity: self.time_maturity,
@@ -160,7 +160,7 @@ impl BSOption {
         });
     }
 
-    pub fn set_time_maturity(&mut self, new_time_maturity: i64) {
+    pub fn set_time_maturity(&mut self, new_time_maturity: u32) {
         self.time_maturity = new_time_maturity;
         self.time_to_maturity = Self::calc_time_to_maturity(OptionTimeDefinition {
             time_maturity: self.time_maturity,
@@ -327,7 +327,7 @@ mod op_calc {
     pub fn calculate_thetas(&option: &super::BSOption) -> ThetaResults {
         super::utils::set_panic_hook();
 
-        const TIMESTAMP_ONE_DAY: i64 = 86_400_000;
+        const TIMESTAMP_ONE_DAY: u32 = 86_400_000;
 
         let mut option_prime = option;
         option_prime.set_time_maturity(option.time_maturity() + TIMESTAMP_ONE_DAY);
