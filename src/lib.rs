@@ -215,7 +215,7 @@ impl BSOption {
     }
 
     fn calc_time_to_maturity(time_def: OptionTimeDefinition) -> f64 {
-        const TIMESTAMP_ONE_YEAR: f64 = 31_536_000_000.0;
+        const TIMESTAMP_ONE_YEAR: f64 = 31_536_000.0;
         let ttm = ((time_def.time_maturity - time_def.time_curr) as f64) / TIMESTAMP_ONE_YEAR;
 
         ttm
