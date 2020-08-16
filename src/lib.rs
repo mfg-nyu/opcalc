@@ -130,6 +130,10 @@ impl BSOption {
         return self.time_maturity;
     }
 
+    pub fn time_to_maturity(&self) -> f64 {
+        return self.time_to_maturity;
+    }
+
     pub fn asset_price(&self) -> f64 {
         return self.asset_price;
     }
