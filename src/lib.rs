@@ -152,7 +152,8 @@ impl BSOption {
 
     /// Option intrinsic property setters
 
-    pub fn set_time_curr(&mut self, new_time_curr: u32) {
+    #[allow(dead_code)]
+    fn set_time_curr(&mut self, new_time_curr: u32) {
         self.time_curr = new_time_curr;
         self.time_to_maturity = Self::calc_time_to_maturity(OptionTimeDefinition {
             time_maturity: self.time_maturity,
@@ -160,7 +161,8 @@ impl BSOption {
         });
     }
 
-    pub fn set_time_maturity(&mut self, new_time_maturity: u32) {
+    #[allow(dead_code)]
+    fn set_time_maturity(&mut self, new_time_maturity: u32) {
         self.time_maturity = new_time_maturity;
         self.time_to_maturity = Self::calc_time_to_maturity(OptionTimeDefinition {
             time_maturity: self.time_maturity,
@@ -168,19 +170,23 @@ impl BSOption {
         });
     }
 
-    pub fn set_asset_price(&mut self, new_asset_price: f64) {
+    #[allow(dead_code)]
+    fn set_asset_price(&mut self, new_asset_price: f64) {
         self.asset_price = new_asset_price;
     }
 
-    pub fn set_strike(&mut self, new_strike: f64) {
+    #[allow(dead_code)]
+    fn set_strike(&mut self, new_strike: f64) {
         self.strike = new_strike;
     }
 
-    pub fn set_volatility(&mut self, new_volatility: f64) {
+    #[allow(dead_code)]
+    fn set_volatility(&mut self, new_volatility: f64) {
         self.volatility = new_volatility;
     }
 
-    pub fn set_payout_rate(&mut self, new_payout_rate: f64) {
+    #[allow(dead_code)]
+    fn set_payout_rate(&mut self, new_payout_rate: f64) {
         self.payout_rate = new_payout_rate;
     }
 
