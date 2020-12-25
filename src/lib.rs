@@ -393,4 +393,13 @@ mod tests {
         approx::assert_abs_diff_eq!(res.call_delta, 0.2890519431809007, epsilon = f64::EPSILON);
         approx::assert_abs_diff_eq!(res.put_delta, -0.7109480568190993, epsilon = f64::EPSILON);
     }
+
+    #[test]
+    fn calculates_option_gammas() {
+        let res = op_calc::calculate_gammas(&create_test_option());
+
+        // TODO: investigate whether gamma should be absolutely equal for calls and puts.
+        approx::assert_abs_diff_eq!(res.call_gamma, 0.04232231027889721, epsilon = f64::EPSILON);
+        approx::assert_abs_diff_eq!(res.put_gamma, 0.042322310279008235, epsilon = f64::EPSILON);
+    }
 }
