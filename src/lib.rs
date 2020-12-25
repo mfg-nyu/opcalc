@@ -401,4 +401,12 @@ mod tests {
         approx::assert_abs_diff_eq!(res.call_gamma, 0.04232231027889721, epsilon = f64::EPSILON);
         approx::assert_abs_diff_eq!(res.put_gamma, 0.042322310279008235, epsilon = f64::EPSILON);
     }
+
+    #[test]
+    fn calculates_option_vegas() {
+        let res = op_calc::calculate_vegas(&create_test_option());
+
+        approx::assert_abs_diff_eq!(res.call_vega, 0.12001554434952766, epsilon = f64::EPSILON);
+        approx::assert_abs_diff_eq!(res.put_vega, 0.12001554434952766, epsilon = f64::EPSILON);
+    }
 }
