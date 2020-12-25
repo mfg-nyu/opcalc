@@ -320,14 +320,13 @@ mod op_calc {
     pub fn calculate_vegas(&option: &super::BSOption) -> VegaResults {
         super::utils::set_panic_hook();
 
-        const VOLATILITY_DELTA: f64 = 0.1;
-        const PRICE_DELTA: f64 = 0.001;
+        const VOLATILITY_DELTA: f64 = 0.0001;
 
         let mut option_prime = option;
-        option_prime.set_asset_price(option.asset_price() + PRICE_DELTA);
+        option_prime.set_volatility(option.volatility() + VOLATILITY_DELTA);
 
-        let call_vega = (option_prime.call_value() - option.call_value()) / VOLATILITY_DELTA;
-        let put_vega = (option_prime.call_value() - option.call_value()) / VOLATILITY_DELTA;
+        let call_vega = (option_prime.call_value() - option.call_value()) / 0.01;
+        let put_vega = (option_prime.call_value() - option.call_value()) / 0.01;
 
         VegaResults {
             call_vega,
