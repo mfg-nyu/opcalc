@@ -357,8 +357,7 @@ mod op_calc {
 mod tests {
     use super::*;
 
-    #[test]
-    fn calculates_option_values() {
+    fn create_test_option() -> BSOption {
         let time_curr = 1606780800; // 2020/12/01 00:00:00
         let time_maturity = 1610668800; // 2021/01/15 00:00:00
 
@@ -368,7 +367,7 @@ mod tests {
         let volatility = 0.23;
         let payout_rate = 0.0;
 
-        let res = op_calc::calculate_option_values(&BSOption::new(
+        BSOption::new(
             time_curr,
             time_maturity,
             asset_price,
@@ -376,9 +375,22 @@ mod tests {
             interest,
             volatility,
             payout_rate,
-        ));
+        )
+    }
+
+    #[test]
+    fn calculates_option_values() {
+        let res = op_calc::calculate_option_values(&create_test_option());
 
         approx::assert_abs_diff_eq!(res.call_value, 1.402645442104692, epsilon = f64::EPSILON);
         approx::assert_abs_diff_eq!(res.put_value, 6.338100538847982, epsilon = f64::EPSILON);
+    }
+
+    #[test]
+    fn calculates_option_deltas() {
+        let res = op_calc::calculate_deltas(&create_test_option());
+
+        approx::assert_abs_diff_eq!(res.call_delta, 0.2890519431809007, epsilon = f64::EPSILON);
+        approx::assert_abs_diff_eq!(res.put_delta, -0.7109480568190993, epsilon = f64::EPSILON);
     }
 }
