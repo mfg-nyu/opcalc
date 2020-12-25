@@ -1,3 +1,4 @@
+extern crate approx;
 extern crate statrs;
 extern crate web_sys;
 
@@ -349,5 +350,35 @@ mod op_calc {
             call_theta,
             put_theta,
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn calculates_option_values() {
+        let time_curr = 1606780800; // 2020/12/01 00:00:00
+        let time_maturity = 1610668800; // 2021/01/15 00:00:00
+
+        let asset_price = 100.0;
+        let strike = 105.0;
+        let interest = 0.005;
+        let volatility = 0.23;
+        let payout_rate = 0.0;
+
+        let res = op_calc::calculate_option_values(&BSOption::new(
+            time_curr,
+            time_maturity,
+            asset_price,
+            strike,
+            interest,
+            volatility,
+            payout_rate,
+        ));
+
+        approx::assert_abs_diff_eq!(res.call_value, 1.402645442104692, epsilon = f64::EPSILON);
+        approx::assert_abs_diff_eq!(res.put_value, 6.338100538847982, epsilon = f64::EPSILON);
     }
 }
