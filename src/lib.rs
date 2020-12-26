@@ -31,13 +31,13 @@ pub enum OptionType {
     Put,
 }
 
-struct OptionTimeDefinition {
+pub struct OptionTimeDefinition {
     time_curr: u32,
     time_maturity: u32,
 }
 
 #[wasm_bindgen]
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 pub struct BSOption {
     time_curr: u32,
     time_maturity: u32,
@@ -230,6 +230,82 @@ impl BSOption {
         let ttm = ((time_def.time_maturity - time_def.time_curr) as f64) / TIMESTAMP_ONE_YEAR;
 
         ttm
+    }
+}
+
+#[derive(Default)]
+pub struct BSOptionBuilder {
+    time_curr: u32,
+    time_maturity: u32,
+    time_to_maturity: f64,
+    asset_price: f64,
+    strike: f64,
+    interest: f64,
+    volatility: f64,
+    payout_rate: f64,
+}
+
+impl BSOptionBuilder {
+    pub fn new() -> BSOptionBuilder {
+        BSOptionBuilder {
+            ..Default::default()
+        }
+    }
+
+    pub fn with_asset_price(self, asset_price: f64) -> BSOptionBuilder {
+        BSOptionBuilder {
+            asset_price,
+            ..self
+        }
+    }
+
+    pub fn with_strike(self, strike: f64) -> BSOptionBuilder {
+        BSOptionBuilder { strike, ..self }
+    }
+
+    pub fn with_time(self, opts: OptionTimeDefinition) -> BSOptionBuilder {
+        match opts {
+            OptionTimeDefinition {
+                time_curr,
+                time_maturity,
+            } => BSOptionBuilder {
+                time_curr,
+                time_maturity,
+                time_to_maturity: BSOption::calc_time_to_maturity(OptionTimeDefinition {
+                    time_curr,
+                    time_maturity,
+                }),
+                ..self
+            },
+        }
+    }
+
+    pub fn with_volatility(self, volatility: f64) -> BSOptionBuilder {
+        BSOptionBuilder { volatility, ..self }
+    }
+
+    pub fn with_interest(self, interest: f64) -> BSOptionBuilder {
+        BSOptionBuilder { interest, ..self }
+    }
+
+    pub fn with_payout_rate(self, payout_rate: f64) -> BSOptionBuilder {
+        BSOptionBuilder {
+            payout_rate,
+            ..self
+        }
+    }
+
+    pub fn create(self) -> BSOption {
+        BSOption {
+            time_curr: self.time_curr,
+            time_maturity: self.time_maturity,
+            time_to_maturity: self.time_to_maturity,
+            asset_price: self.asset_price,
+            strike: self.strike,
+            interest: self.interest,
+            volatility: self.volatility,
+            payout_rate: self.payout_rate,
+        }
     }
 }
 
