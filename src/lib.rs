@@ -239,7 +239,7 @@ pub struct BSOptionBuilder {
     time_curr: Option<u32>,
     time_maturity: Option<u32>,
     time_to_maturity: Option<f64>,
-    asset_price: f64,
+    asset_price: Option<f64>,
     strike: f64,
     interest: f64,
     volatility: f64,
@@ -255,7 +255,7 @@ impl BSOptionBuilder {
 
     pub fn with_asset_price(self, asset_price: f64) -> BSOptionBuilder {
         BSOptionBuilder {
-            asset_price,
+            asset_price: Some(asset_price),
             ..self
         }
     }
@@ -313,15 +313,20 @@ impl BSOptionBuilder {
             } => Err("Did not call `with_time` before creating BSOption.".into()),
 
             BSOptionBuilder {
+                asset_price: None, ..
+            } => Err("Did not call `with_asset_price` before creating BSOption.".into()),
+
+            BSOptionBuilder {
                 time_curr: Some(time_curr),
                 time_maturity: Some(time_maturity),
                 time_to_maturity: Some(time_to_maturity),
+                asset_price: Some(asset_price),
                 ..
             } => Ok(BSOption {
                 time_curr,
                 time_maturity,
                 time_to_maturity,
-                asset_price: self.asset_price,
+                asset_price,
                 strike: self.strike,
                 interest: self.interest,
                 volatility: self.volatility,
