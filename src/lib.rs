@@ -238,7 +238,7 @@ impl BSOption {
 pub struct BSOptionBuilder {
     time_curr: Option<u32>,
     time_maturity: Option<u32>,
-    time_to_maturity: f64,
+    time_to_maturity: Option<f64>,
     asset_price: f64,
     strike: f64,
     interest: f64,
@@ -272,10 +272,10 @@ impl BSOptionBuilder {
             } => BSOptionBuilder {
                 time_curr: Some(time_curr),
                 time_maturity: Some(time_maturity),
-                time_to_maturity: BSOption::calc_time_to_maturity(OptionTimeDefinition {
+                time_to_maturity: Some(BSOption::calc_time_to_maturity(OptionTimeDefinition {
                     time_curr,
                     time_maturity,
-                }),
+                })),
                 ..self
             },
         }
@@ -308,13 +308,19 @@ impl BSOptionBuilder {
             } => Err("Did not call `with_time` before creating BSOption.".into()),
 
             BSOptionBuilder {
+                time_to_maturity: None,
+                ..
+            } => Err("Did not call `with_time` before creating BSOption.".into()),
+
+            BSOptionBuilder {
                 time_curr: Some(time_curr),
                 time_maturity: Some(time_maturity),
+                time_to_maturity: Some(time_to_maturity),
                 ..
             } => Ok(BSOption {
                 time_curr,
                 time_maturity,
-                time_to_maturity: self.time_to_maturity,
+                time_to_maturity,
                 asset_price: self.asset_price,
                 strike: self.strike,
                 interest: self.interest,
