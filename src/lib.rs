@@ -337,10 +337,10 @@ mod op_calc {
     pub fn calculate_thetas(&option: &super::BSOption) -> ThetaResults {
         super::utils::set_panic_hook();
 
-        const TIMESTAMP_ONE_DAY: u32 = 86_400_000;
+        const TIMESTAMP_ONE_DAY: u32 = 86_400;
 
         let mut option_prime = option;
-        option_prime.set_time_maturity(option.time_maturity() + TIMESTAMP_ONE_DAY);
+        option_prime.set_time_curr(option.time_curr() + TIMESTAMP_ONE_DAY);
 
         let call_theta = option_prime.call_value() - option.call_value();
         let put_theta = option_prime.put_value() - option.put_value();
