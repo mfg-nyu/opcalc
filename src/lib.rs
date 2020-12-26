@@ -297,24 +297,31 @@ impl BSOptionBuilder {
     }
 
     pub fn create(self) -> Result<BSOption, Box<dyn Error>> {
+        fn missing_build_step(missing_builder_func_name: &str) -> String {
+            format!(
+                "Did not call {} before creating BSOption.",
+                missing_builder_func_name
+            )
+        }
+
         match self {
             BSOptionBuilder {
                 time_curr: None, ..
-            } => Err("Did not call `with_time` before creating BSOption.".into()),
+            } => Err(missing_build_step("with_time").into()),
 
             BSOptionBuilder {
                 time_maturity: None,
                 ..
-            } => Err("Did not call `with_time` before creating BSOption.".into()),
+            } => Err(missing_build_step("with_time").into()),
 
             BSOptionBuilder {
                 time_to_maturity: None,
                 ..
-            } => Err("Did not call `with_time` before creating BSOption.".into()),
+            } => Err(missing_build_step("with_time").into()),
 
             BSOptionBuilder {
                 asset_price: None, ..
-            } => Err("Did not call `with_asset_price` before creating BSOption.".into()),
+            } => Err(missing_build_step("with_asset_price").into()),
 
             BSOptionBuilder {
                 time_curr: Some(time_curr),
