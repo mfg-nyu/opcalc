@@ -409,4 +409,12 @@ mod tests {
         approx::assert_abs_diff_eq!(res.call_vega, 0.12001554434952766, epsilon = f64::EPSILON);
         approx::assert_abs_diff_eq!(res.put_vega, 0.12001554434952766, epsilon = f64::EPSILON);
     }
+
+    #[test]
+    fn calculates_option_thetas() {
+        let res = op_calc::calculate_thetas(&create_test_option());
+
+        approx::assert_abs_diff_eq!(res.call_theta, -0.03115177341956965, epsilon = f64::EPSILON);
+        approx::assert_abs_diff_eq!(res.put_theta, -0.029717873380988635, epsilon = f64::EPSILON);
+    }
 }
