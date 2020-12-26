@@ -237,6 +237,7 @@ impl BSOption {
     }
 }
 
+#[wasm_bindgen]
 #[derive(Default)]
 pub struct BSOptionBuilder {
     time_curr: Option<u32>,
