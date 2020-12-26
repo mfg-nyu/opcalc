@@ -249,6 +249,7 @@ pub struct BSOptionBuilder {
 impl BSOptionBuilder {
     pub fn new() -> BSOptionBuilder {
         BSOptionBuilder {
+            payout_rate: 0.0,
             ..Default::default()
         }
     }
