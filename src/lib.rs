@@ -82,43 +82,43 @@ impl BSOption {
     /// Option derived property getters (they're read-only)
 
     pub fn call_value(&self) -> f64 {
-        op_calc::calculate_option_values(self).call_value
+        op_calc::calculate_option_values(self).call
     }
 
     pub fn call_delta(&self) -> f64 {
-        op_calc::calculate_deltas(self).call_delta
+        op_calc::calculate_deltas(self).call
     }
 
     pub fn call_gamma(&self) -> f64 {
-        op_calc::calculate_gammas(self).call_gamma
+        op_calc::calculate_gammas(self).call
     }
 
     pub fn call_vega(&self) -> f64 {
-        op_calc::calculate_vegas(self).call_vega
+        op_calc::calculate_vegas(self).call
     }
 
     pub fn call_theta(&self) -> f64 {
-        op_calc::calculate_thetas(self).call_theta
+        op_calc::calculate_thetas(self).call
     }
 
     pub fn put_value(&self) -> f64 {
-        op_calc::calculate_option_values(self).put_value
+        op_calc::calculate_option_values(self).put
     }
 
     pub fn put_delta(&self) -> f64 {
-        op_calc::calculate_deltas(self).put_delta
+        op_calc::calculate_deltas(self).put
     }
 
     pub fn put_gamma(&self) -> f64 {
-        op_calc::calculate_gammas(self).put_gamma
+        op_calc::calculate_gammas(self).put
     }
 
     pub fn put_vega(&self) -> f64 {
-        op_calc::calculate_vegas(self).put_vega
+        op_calc::calculate_vegas(self).put
     }
 
     pub fn put_theta(&self) -> f64 {
-        op_calc::calculate_thetas(self).put_theta
+        op_calc::calculate_thetas(self).put
     }
 
     /// Option int·rinsic property getters
@@ -310,32 +310,12 @@ impl BSOptionBuilder {
 }
 
 mod op_calc {
-    pub struct OptionValueResults {
-        pub call_value: f64,
-        pub put_value: f64,
+    pub struct OptionResults {
+        pub call: f64,
+        pub put: f64,
     }
 
-    pub struct DeltaResults {
-        pub call_delta: f64,
-        pub put_delta: f64,
-    }
-
-    pub struct GammaResults {
-        pub call_gamma: f64,
-        pub put_gamma: f64,
-    }
-
-    pub struct VegaResults {
-        pub call_vega: f64,
-        pub put_vega: f64,
-    }
-
-    pub struct ThetaResults {
-        pub call_theta: f64,
-        pub put_theta: f64,
-    }
-
-    pub fn calculate_option_values(&option: &super::BSOption) -> OptionValueResults {
+    pub fn calculate_option_values(&option: &super::BSOption) -> OptionResults {
         super::utils::set_panic_hook();
 
         // calculate call value
@@ -356,26 +336,26 @@ mod op_calc {
 
         let put_value = call_value - put_pt1 + put_pt2;
 
-        OptionValueResults {
-            call_value,
-            put_value,
+        OptionResults {
+            call: call_value,
+            put: put_value,
         }
     }
 
-    pub fn calculate_deltas(&option: &super::BSOption) -> DeltaResults {
+    pub fn calculate_deltas(&option: &super::BSOption) -> OptionResults {
         super::utils::set_panic_hook();
 
         let delta_factor = -option.div_continuous() * option.time_to_maturity;
         let call_delta = delta_factor.exp() * super::BSOption::normdist(option.d1());
         let put_delta = call_delta - delta_factor.exp();
 
-        DeltaResults {
-            call_delta,
-            put_delta,
+        OptionResults {
+            call: call_delta,
+            put: put_delta,
         }
     }
 
-    pub fn calculate_gammas(&option: &super::BSOption) -> GammaResults {
+    pub fn calculate_gammas(&option: &super::BSOption) -> OptionResults {
         super::utils::set_panic_hook();
 
         // minimum price movement unit
@@ -387,13 +367,13 @@ mod op_calc {
         let call_gamma = (option_prime.call_delta() - option.call_delta()) / PRICE_DELTA;
         let put_gamma = (option_prime.put_delta() - option.put_delta()) / PRICE_DELTA;
 
-        GammaResults {
-            call_gamma,
-            put_gamma,
+        OptionResults {
+            call: call_gamma,
+            put: put_gamma,
         }
     }
 
-    pub fn calculate_vegas(&option: &super::BSOption) -> VegaResults {
+    pub fn calculate_vegas(&option: &super::BSOption) -> OptionResults {
         super::utils::set_panic_hook();
 
         const VOLATILITY_DELTA: f64 = 0.0001;
@@ -404,13 +384,13 @@ mod op_calc {
         let call_vega = (option_prime.call_value() - option.call_value()) / 0.01;
         let put_vega = (option_prime.call_value() - option.call_value()) / 0.01;
 
-        VegaResults {
-            call_vega,
-            put_vega,
+        OptionResults {
+            call: call_vega,
+            put: put_vega,
         }
     }
 
-    pub fn calculate_thetas(&option: &super::BSOption) -> ThetaResults {
+    pub fn calculate_thetas(&option: &super::BSOption) -> OptionResults {
         super::utils::set_panic_hook();
 
         const TIMESTAMP_ONE_DAY: u32 = 86_400;
@@ -421,9 +401,9 @@ mod op_calc {
         let call_theta = option_prime.call_value() - option.call_value();
         let put_theta = option_prime.put_value() - option.put_value();
 
-        ThetaResults {
-            call_theta,
-            put_theta,
+        OptionResults {
+            call: call_theta,
+            put: put_theta,
         }
     }
 }
@@ -455,42 +435,42 @@ mod tests {
 
     #[test]
     fn calculates_option_values() {
-        let res = op_calc::calculate_option_values(&create_test_option());
+        let option_vals = op_calc::calculate_option_values(&create_test_option());
 
-        approx::assert_abs_diff_eq!(res.call_value, 1.402645442104692, epsilon = f64::EPSILON);
-        approx::assert_abs_diff_eq!(res.put_value, 6.338100538847982, epsilon = f64::EPSILON);
+        approx::assert_abs_diff_eq!(option_vals.call, 1.402645442104692, epsilon = f64::EPSILON);
+        approx::assert_abs_diff_eq!(option_vals.put, 6.338100538847982, epsilon = f64::EPSILON);
     }
 
     #[test]
     fn calculates_option_deltas() {
-        let res = op_calc::calculate_deltas(&create_test_option());
+        let deltas = op_calc::calculate_deltas(&create_test_option());
 
-        approx::assert_abs_diff_eq!(res.call_delta, 0.2890519431809007, epsilon = f64::EPSILON);
-        approx::assert_abs_diff_eq!(res.put_delta, -0.7109480568190993, epsilon = f64::EPSILON);
+        approx::assert_abs_diff_eq!(deltas.call, 0.2890519431809007, epsilon = f64::EPSILON);
+        approx::assert_abs_diff_eq!(deltas.put, -0.7109480568190993, epsilon = f64::EPSILON);
     }
 
     #[test]
     fn calculates_option_gammas() {
-        let res = op_calc::calculate_gammas(&create_test_option());
+        let gammas = op_calc::calculate_gammas(&create_test_option());
 
         // TODO: investigate whether gamma should be absolutely equal for calls and puts.
-        approx::assert_abs_diff_eq!(res.call_gamma, 0.04232231027889721, epsilon = f64::EPSILON);
-        approx::assert_abs_diff_eq!(res.put_gamma, 0.042322310279008235, epsilon = f64::EPSILON);
+        approx::assert_abs_diff_eq!(gammas.call, 0.04232231027889721, epsilon = f64::EPSILON);
+        approx::assert_abs_diff_eq!(gammas.put, 0.042322310279008235, epsilon = f64::EPSILON);
     }
 
     #[test]
     fn calculates_option_vegas() {
-        let res = op_calc::calculate_vegas(&create_test_option());
+        let vegas = op_calc::calculate_vegas(&create_test_option());
 
-        approx::assert_abs_diff_eq!(res.call_vega, 0.12001554434952766, epsilon = f64::EPSILON);
-        approx::assert_abs_diff_eq!(res.put_vega, 0.12001554434952766, epsilon = f64::EPSILON);
+        approx::assert_abs_diff_eq!(vegas.call, 0.12001554434952766, epsilon = f64::EPSILON);
+        approx::assert_abs_diff_eq!(vegas.put, 0.12001554434952766, epsilon = f64::EPSILON);
     }
 
     #[test]
     fn calculates_option_thetas() {
-        let res = op_calc::calculate_thetas(&create_test_option());
+        let thetas = op_calc::calculate_thetas(&create_test_option());
 
-        approx::assert_abs_diff_eq!(res.call_theta, -0.03115177341956965, epsilon = f64::EPSILON);
-        approx::assert_abs_diff_eq!(res.put_theta, -0.029717873380988635, epsilon = f64::EPSILON);
+        approx::assert_abs_diff_eq!(thetas.call, -0.03115177341956965, epsilon = f64::EPSILON);
+        approx::assert_abs_diff_eq!(thetas.put, -0.029717873380988635, epsilon = f64::EPSILON);
     }
 }
