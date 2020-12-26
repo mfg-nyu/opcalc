@@ -409,7 +409,7 @@ mod op_calc {
 }
 
 #[cfg(test)]
-mod tests {
+mod opcalc_tests {
     use super::*;
 
     fn create_test_option() -> BSOption {
