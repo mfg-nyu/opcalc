@@ -242,7 +242,7 @@ pub struct BSOptionBuilder {
     asset_price: Option<f64>,
     strike: Option<f64>,
     interest: Option<f64>,
-    volatility: f64,
+    volatility: Option<f64>,
     payout_rate: f64,
 }
 
@@ -285,7 +285,10 @@ impl BSOptionBuilder {
     }
 
     pub fn with_volatility(self, volatility: f64) -> BSOptionBuilder {
-        BSOptionBuilder { volatility, ..self }
+        BSOptionBuilder {
+            volatility: Some(volatility),
+            ..self
+        }
     }
 
     pub fn with_interest(self, interest: f64) -> BSOptionBuilder {
@@ -336,12 +339,17 @@ impl BSOptionBuilder {
             }
 
             BSOptionBuilder {
+                volatility: None, ..
+            } => Err(missing_build_step("with_volatility").into()),
+
+            BSOptionBuilder {
                 time_curr: Some(time_curr),
                 time_maturity: Some(time_maturity),
                 time_to_maturity: Some(time_to_maturity),
                 asset_price: Some(asset_price),
                 strike: Some(strike),
                 interest: Some(interest),
+                volatility: Some(volatility),
                 ..
             } => Ok(BSOption {
                 time_curr,
@@ -350,7 +358,7 @@ impl BSOptionBuilder {
                 asset_price,
                 strike,
                 interest,
-                volatility: self.volatility,
+                volatility,
                 payout_rate: self.payout_rate,
             }),
         }
