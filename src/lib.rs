@@ -1,6 +1,7 @@
 extern crate approx;
 extern crate statrs;
 extern crate web_sys;
+use std::error::Error;
 
 mod utils;
 
@@ -235,7 +236,7 @@ impl BSOption {
 
 #[derive(Default)]
 pub struct BSOptionBuilder {
-    time_curr: u32,
+    time_curr: Option<u32>,
     time_maturity: u32,
     time_to_maturity: f64,
     asset_price: f64,
@@ -269,7 +270,7 @@ impl BSOptionBuilder {
                 time_curr,
                 time_maturity,
             } => BSOptionBuilder {
-                time_curr,
+                time_curr: Some(time_curr),
                 time_maturity,
                 time_to_maturity: BSOption::calc_time_to_maturity(OptionTimeDefinition {
                     time_curr,
@@ -295,16 +296,25 @@ impl BSOptionBuilder {
         }
     }
 
-    pub fn create(self) -> BSOption {
-        BSOption {
-            time_curr: self.time_curr,
-            time_maturity: self.time_maturity,
-            time_to_maturity: self.time_to_maturity,
-            asset_price: self.asset_price,
-            strike: self.strike,
-            interest: self.interest,
-            volatility: self.volatility,
-            payout_rate: self.payout_rate,
+    pub fn create(self) -> Result<BSOption, Box<dyn Error>> {
+        match self {
+            BSOptionBuilder {
+                time_curr: None, ..
+            } => Err("Did not call `with_time` before creating BSOption.".into()),
+
+            BSOptionBuilder {
+                time_curr: Some(time_curr),
+                ..
+            } => Ok(BSOption {
+                time_curr,
+                time_maturity: self.time_maturity,
+                time_to_maturity: self.time_to_maturity,
+                asset_price: self.asset_price,
+                strike: self.strike,
+                interest: self.interest,
+                volatility: self.volatility,
+                payout_rate: self.payout_rate,
+            }),
         }
     }
 }
