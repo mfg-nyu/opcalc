@@ -100,8 +100,6 @@ impl BSOption {
         op_calc::calculate_thetas(self).put
     }
 
-    /// Option int·rinsic property getters
-
     pub fn time_curr(&self) -> u32 {
         return self.time_curr;
     }
