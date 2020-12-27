@@ -67,7 +67,7 @@ function computeOptionOutputs(
   });
 }
 
-const useOpCalc = (initialOptionDef: OptionDefinition) => {
+const useOpCalc = (initialOptionInput: OptionDefinition) => {
   const [{ instance: opcalc, loadErred }, setOpCalcModule] = useState<
     | { instance: undefined; loadErred: boolean }
     | {
@@ -76,8 +76,8 @@ const useOpCalc = (initialOptionDef: OptionDefinition) => {
       }
   >({ instance: undefined, loadErred: false });
 
-  const [optionDef, setOptionDef] = useState<OptionDefinition>(
-    initialOptionDef
+  const [optionInput, updateInput] = useState<OptionDefinition>(
+    initialOptionInput
   );
 
   const [optionOutputs, setOptionOutputs] = useState<
@@ -97,20 +97,20 @@ const useOpCalc = (initialOptionDef: OptionDefinition) => {
   useEffect(() => {
     if (!opcalc) return;
 
-    computeOptionOutputs(optionDef, opcalc)
+    computeOptionOutputs(optionInput, opcalc)
       .then((res) => setOptionOutputs(res))
       .catch((e) => console.error(e));
-  }, [opcalc, optionDef]);
+  }, [opcalc, optionInput]);
 
   return {
-    currentOptionDef: optionDef,
-    setOptionDef,
+    currentOptionInput: optionInput,
+    updateInput,
     outputs: optionOutputs,
     loadErred,
   };
 };
 
-const optionDef: OptionDefinition = {
+const initialOptionInput: OptionDefinition = {
   assetPrice: 100,
   strike: 105,
   volatility: 0.23,
@@ -120,8 +120,8 @@ const optionDef: OptionDefinition = {
 };
 
 function App() {
-  const { outputs, loadErred, currentOptionDef, setOptionDef } = useOpCalc(
-    optionDef
+  const { outputs, loadErred, currentOptionInput, updateInput } = useOpCalc(
+    initialOptionInput
   );
 
   return (
@@ -132,7 +132,7 @@ function App() {
             <code className="header">OpCalc</code>
           </h1>
 
-          <OptionInput input={currentOptionDef} onChange={setOptionDef} />
+          <OptionInput input={currentOptionInput} onChange={updateInput} />
 
           {loadErred ? <LoadErred /> : <OutputTable data={outputs} />}
         </section>
