@@ -24,7 +24,14 @@ interface OptionOutputs {
 
 const useOpCalc = (initialOptionDef: OptionDefinition) => {
   type OpCalcType = typeof import("opcalc");
-  const [opcalc, setOpCalc] = useState<OpCalcType | undefined>(undefined);
+  const [{ instance: opcalc, loadErred }, setOpCalcModule] = useState<
+    | { instance: undefined; loadErred: boolean }
+    | {
+        instance: OpCalcType;
+        loadErred: false;
+      }
+  >({ instance: undefined, loadErred: false });
+
   const [optionDef, setOptionDef] = useState<OptionDefinition>(
     initialOptionDef
   );
@@ -32,8 +39,11 @@ const useOpCalc = (initialOptionDef: OptionDefinition) => {
   // load opcalc on launch
   useEffect(() => {
     import("opcalc")
-      .then((instance) => setOpCalc(instance))
-      .catch((e) => console.error(e));
+      .then((instance) => setOpCalcModule({ instance, loadErred: false }))
+      .catch((e) => {
+        console.error(e);
+        setOpCalcModule({ instance: undefined, loadErred: true });
+      });
   }, []);
 
   const outputs = useMemo<
@@ -87,6 +97,7 @@ const useOpCalc = (initialOptionDef: OptionDefinition) => {
   return {
     setOptionDef,
     outputs,
+    loadErred,
   };
 };
 
@@ -100,7 +111,7 @@ const optionDef: OptionDefinition = {
 };
 
 function App() {
-  const { outputs } = useOpCalc(optionDef);
+  const { outputs, loadErred } = useOpCalc(optionDef);
 
   const DECIMAL_COUNT = 5;
 
@@ -112,18 +123,24 @@ function App() {
             <code className="header">OpCalc</code>
           </h1>
 
-          <div className="option-entry">
-            <span className="label">Call value</span>
-            <span className="content">
-              {outputs?.call.value.toFixed(DECIMAL_COUNT)}
-            </span>
-          </div>
-          <div className="option-entry">
-            <span className="label">Put value</span>
-            <span className="content">
-              {outputs?.put.value.toFixed(DECIMAL_COUNT)}
-            </span>
-          </div>
+          {loadErred || !outputs ? (
+            <span>An error occurred during calculation.</span>
+          ) : (
+            <>
+              <div className="option-entry">
+                <span className="label">Call value</span>
+                <span className="content">
+                  {outputs.call.value.toFixed(DECIMAL_COUNT)}
+                </span>
+              </div>
+              <div className="option-entry">
+                <span className="label">Put value</span>
+                <span className="content">
+                  {outputs.put.value.toFixed(DECIMAL_COUNT)}
+                </span>
+              </div>
+            </>
+          )}
         </section>
       </main>
     </div>
