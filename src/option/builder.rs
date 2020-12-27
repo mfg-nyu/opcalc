@@ -1,5 +1,4 @@
-use crate::BSOption;
-use crate::OptionTimeDefinition;
+use crate::option::{BSOption, OptionTimeDefinition};
 use std::fmt;
 use wasm_bindgen::prelude::*;
 

@@ -1,21 +1,23 @@
 pub mod op_calc {
+    use crate::option::BSOption;
+
     pub struct OptionResults {
         pub call: f64,
         pub put: f64,
     }
 
-    pub fn calculate_option_values(&option: &crate::BSOption) -> OptionResults {
+    pub fn calculate_option_values(&option: &BSOption) -> OptionResults {
         crate::utils::set_panic_hook();
 
         // calculate call value
         let asset_price_factor = (-option.div_continuous() * option.time_to_maturity).exp();
         let discounted_asset_price = option.asset_price * asset_price_factor;
         //  call_pt1 = S_t * N(d1)
-        let call_pt1 = discounted_asset_price * crate::BSOption::normdist(option.d1());
+        let call_pt1 = discounted_asset_price * BSOption::normdist(option.d1());
 
         let strike_factor = (-option.r_continuous() * option.time_to_maturity).exp();
         //  call_pt2 = K * e^(-r*t) * N(d2)
-        let call_pt2 = option.strike * strike_factor * crate::BSOption::normdist(option.d2());
+        let call_pt2 = option.strike * strike_factor * BSOption::normdist(option.d2());
 
         let call_value = call_pt1 - call_pt2;
 
@@ -31,11 +33,11 @@ pub mod op_calc {
         }
     }
 
-    pub fn calculate_deltas(&option: &crate::BSOption) -> OptionResults {
+    pub fn calculate_deltas(&option: &BSOption) -> OptionResults {
         crate::utils::set_panic_hook();
 
         let delta_factor = -option.div_continuous() * option.time_to_maturity;
-        let call_delta = delta_factor.exp() * crate::BSOption::normdist(option.d1());
+        let call_delta = delta_factor.exp() * BSOption::normdist(option.d1());
         let put_delta = call_delta - delta_factor.exp();
 
         OptionResults {
@@ -44,7 +46,7 @@ pub mod op_calc {
         }
     }
 
-    pub fn calculate_gammas(&option: &crate::BSOption) -> OptionResults {
+    pub fn calculate_gammas(&option: &BSOption) -> OptionResults {
         crate::utils::set_panic_hook();
 
         // minimum price movement unit
@@ -62,7 +64,7 @@ pub mod op_calc {
         }
     }
 
-    pub fn calculate_vegas(&option: &crate::BSOption) -> OptionResults {
+    pub fn calculate_vegas(&option: &BSOption) -> OptionResults {
         crate::utils::set_panic_hook();
 
         const VOLATILITY_DELTA: f64 = 0.0001;
@@ -79,7 +81,7 @@ pub mod op_calc {
         }
     }
 
-    pub fn calculate_thetas(&option: &crate::BSOption) -> OptionResults {
+    pub fn calculate_thetas(&option: &BSOption) -> OptionResults {
         crate::utils::set_panic_hook();
 
         const TIMESTAMP_ONE_DAY: u32 = 86_400;
@@ -99,7 +101,8 @@ pub mod op_calc {
 
 #[cfg(test)]
 mod opcalc_tests {
-    use crate::*;
+    use crate::option::opcalc::op_calc;
+    use crate::option::BSOption;
 
     fn create_test_option() -> BSOption {
         let time_curr = 1606780800; // 2020/12/01 00:00:00
