@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 
 const getSecondTimestamp = (dt: Date): number => {
@@ -32,33 +32,39 @@ interface CallPutOutputs {
 function computeOptionOutputs(
   input: OptionDefinition,
   opcalc: OpCalcType
-): CallPutOutputs {
-  const option = opcalc
-    .create_option()
-    .with_asset_price(input.assetPrice)
-    .with_strike(input.strike)
-    .with_volatility(input.volatility)
-    .with_interest(input.interest)
-    .with_current_time(getSecondTimestamp(input.currTime))
-    .with_maturity_time(getSecondTimestamp(input.expiryTime))
-    .finalize();
+): Promise<CallPutOutputs> {
+  return new Promise((resolve, reject) => {
+    try {
+      const option = opcalc
+        .create_option()
+        .with_asset_price(input.assetPrice)
+        .with_strike(input.strike)
+        .with_volatility(input.volatility)
+        .with_interest(input.interest)
+        .with_current_time(getSecondTimestamp(input.currTime))
+        .with_maturity_time(getSecondTimestamp(input.expiryTime))
+        .finalize();
 
-  return {
-    call: {
-      value: option.call_value(),
-      delta: option.call_delta(),
-      gamma: option.call_gamma(),
-      vega: option.call_vega(),
-      theta: option.call_theta(),
-    },
-    put: {
-      value: option.put_value(),
-      delta: option.put_delta(),
-      gamma: option.put_gamma(),
-      vega: option.put_vega(),
-      theta: option.put_theta(),
-    },
-  };
+      resolve({
+        call: {
+          value: option.call_value(),
+          delta: option.call_delta(),
+          gamma: option.call_gamma(),
+          vega: option.call_vega(),
+          theta: option.call_theta(),
+        },
+        put: {
+          value: option.put_value(),
+          delta: option.put_delta(),
+          gamma: option.put_gamma(),
+          vega: option.put_vega(),
+          theta: option.put_theta(),
+        },
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
 }
 
 const useOpCalc = (initialOptionDef: OptionDefinition) => {
@@ -74,6 +80,10 @@ const useOpCalc = (initialOptionDef: OptionDefinition) => {
     initialOptionDef
   );
 
+  const [optionOutputs, setOptionOutputs] = useState<
+    CallPutOutputs | undefined
+  >(undefined);
+
   // load opcalc on launch
   useEffect(() => {
     import("opcalc")
@@ -84,21 +94,18 @@ const useOpCalc = (initialOptionDef: OptionDefinition) => {
       });
   }, []);
 
-  const outputs = useMemo<CallPutOutputs | undefined>(() => {
+  useEffect(() => {
     if (!opcalc) return;
 
-    try {
-      return computeOptionOutputs(optionDef, opcalc);
-    } catch (error) {
-      console.error(error);
-      return;
-    }
+    computeOptionOutputs(optionDef, opcalc)
+      .then((res) => setOptionOutputs(res))
+      .catch((e) => console.error(e));
   }, [opcalc, optionDef]);
 
   return {
     currentOptionDef: optionDef,
     setOptionDef,
-    outputs,
+    outputs: optionOutputs,
     loadErred,
   };
 };
