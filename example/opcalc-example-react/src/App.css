@@ -58,17 +58,29 @@ table.output td {
 
 .option-input-container {
   margin: 1rem 0;
+  width: 20rem;
 }
 
 .form-entry {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin: 0.5rem 0;
 }
 
 .form-entry label {
   color: white;
   font-weight: bold;
+  text-align: left;
   margin-right: 1rem;
   min-width: 5rem;
+}
+
+.form-entry input {
+  font-weight: bold;
+  background: #232323;
+  border: 2px solid black;
+  color: white;
+  line-height: 2;
+  padding-left: 0.4rem;
 }
