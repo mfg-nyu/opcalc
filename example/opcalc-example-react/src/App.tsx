@@ -1,55 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import "./App.css";
 
-enum LoadStatus {
-  NotLoaded,
-  Loaded,
-  LoadErred,
-}
-
 const getSecondTimestamp = (dt: Date): number => {
   return Math.floor(dt.getTime() / 1000);
-};
-
-/**
- * Imports a wasm module, or signals error if an error has occured during import.
- *
- * @typeParam T the type of module to be imported.
- * @param loadPath Specify the path where wasm module should be imported from
- *   (e.g. 'opcalc').
- */
-const useWasm = function <T>(loadPath: string) {
-  const [state, setState] = useState<{
-    instance: T | undefined;
-    loadStatus: LoadStatus;
-    error: Error | undefined;
-  }>({
-    instance: undefined,
-    loadStatus: LoadStatus.NotLoaded,
-    error: undefined,
-  });
-
-  useEffect(() => {
-    import("opcalc")
-      .then((instance: any) => {
-        setState({ instance, loadStatus: LoadStatus.Loaded, error: undefined });
-      })
-      .catch((e) => {
-        console.error(e);
-        setState((prevState) => ({
-          ...prevState,
-          error: e,
-          loadStatus: LoadStatus.LoadErred,
-        }));
-      });
-  }, [loadPath]);
-
-  return {
-    instance: state.instance,
-    error: state.error,
-    loaded: state.loadStatus === LoadStatus.Loaded,
-    loadErred: state.loadStatus === LoadStatus.LoadErred,
-  };
 };
 
 interface OptionDefinition {
@@ -63,11 +16,17 @@ interface OptionDefinition {
 
 const useOpCalc = (initialOptionDef: OptionDefinition) => {
   type OpCalcType = typeof import("opcalc");
-  const { instance: opcalc } = useWasm<OpCalcType>("opcalc");
-
+  const [opcalc, setOpCalc] = useState<OpCalcType | undefined>(undefined);
   const [optionDef, setOptionDef] = useState<OptionDefinition>(
     initialOptionDef
   );
+
+  // load opcalc on launch
+  useEffect(() => {
+    import("opcalc")
+      .then((instance) => setOpCalc(instance))
+      .catch((e) => console.error(e));
+  }, []);
 
   const outputs = useMemo(() => {
     if (!opcalc) return {};
