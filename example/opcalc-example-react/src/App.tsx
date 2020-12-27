@@ -22,6 +22,11 @@ interface OptionOutputs {
   theta: number;
 }
 
+interface CallPutOutputs {
+  call: OptionOutputs;
+  put: OptionOutputs;
+}
+
 const useOpCalc = (initialOptionDef: OptionDefinition) => {
   type OpCalcType = typeof import("opcalc");
   const [{ instance: opcalc, loadErred }, setOpCalcModule] = useState<
@@ -46,9 +51,7 @@ const useOpCalc = (initialOptionDef: OptionDefinition) => {
       });
   }, []);
 
-  const outputs = useMemo<
-    { call: OptionOutputs; put: OptionOutputs } | undefined
-  >(() => {
+  const outputs = useMemo<CallPutOutputs | undefined>(() => {
     if (!opcalc) return;
 
     const {
@@ -112,8 +115,6 @@ const optionDef: OptionDefinition = {
 function App() {
   const { outputs, loadErred } = useOpCalc(optionDef);
 
-  const DECIMAL_COUNT = 5;
-
   return (
     <div className="App">
       <main>
@@ -122,28 +123,38 @@ function App() {
             <code className="header">OpCalc</code>
           </h1>
 
-          {loadErred ? (
-            <span>An error occurred during calculation.</span>
-          ) : (
-            <>
-              <div className="option-entry">
-                <span className="label">Call value</span>
-                <span className="content">
-                  {outputs?.call.value.toFixed(DECIMAL_COUNT)}
-                </span>
-              </div>
-              <div className="option-entry">
-                <span className="label">Put value</span>
-                <span className="content">
-                  {outputs?.put.value.toFixed(DECIMAL_COUNT)}
-                </span>
-              </div>
-            </>
-          )}
+          {loadErred ? <LoadErred /> : <OutputTable data={outputs} />}
         </section>
       </main>
     </div>
   );
 }
+
+const LoadErred: React.FC = () => {
+  return <span>An error occurred during calculation.</span>;
+};
+
+const OutputTable: React.FC<{ data: CallPutOutputs | undefined }> = ({
+  data,
+}) => {
+  const DECIMAL_COUNT = 5;
+
+  return (
+    <>
+      <div className="option-entry">
+        <span className="label">Call value</span>
+        <span className="content">
+          {data?.call.value.toFixed(DECIMAL_COUNT)}
+        </span>
+      </div>
+      <div className="option-entry">
+        <span className="label">Put value</span>
+        <span className="content">
+          {data?.put.value.toFixed(DECIMAL_COUNT)}
+        </span>
+      </div>
+    </>
+  );
+};
 
 export default App;
