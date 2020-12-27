@@ -60,8 +60,6 @@ const useOpCalc = (initialOptionDef: OptionDefinition) => {
       expiryTime,
     } = optionDef;
 
-    console.log(optionDef);
-
     try {
       const option = opcalc.WasmBSOptionBuilder.new()
         .with_asset_price(assetPrice)
