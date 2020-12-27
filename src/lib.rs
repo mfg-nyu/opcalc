@@ -1,12 +1,12 @@
 extern crate approx;
 extern crate statrs;
 extern crate web_sys;
-use std::error::Error;
 
 mod opcalc;
 mod utils;
 
 use crate::opcalc::op_calc;
+use std::fmt;
 
 use statrs::distribution::{Normal, Univariate};
 use wasm_bindgen::prelude::*;
@@ -237,6 +237,21 @@ impl BSOption {
     }
 }
 
+#[derive(Debug, Clone)]
+pub struct OptionMissingBuildStepError {
+    missing_step_name: String,
+}
+
+impl fmt::Display for OptionMissingBuildStepError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(
+            f,
+            "Did not call {} before creating BSOption.",
+            self.missing_step_name
+        )
+    }
+}
+
 #[wasm_bindgen]
 #[derive(Default)]
 pub struct BSOptionBuilder {
@@ -310,42 +325,47 @@ impl BSOptionBuilder {
         }
     }
 
-    pub fn create(self) -> Result<BSOption, Box<dyn Error>> {
-        fn missing_build_step(missing_builder_func_name: &str) -> String {
-            format!(
-                "Did not call {} before creating BSOption.",
-                missing_builder_func_name
-            )
-        }
-
+    pub fn create(self) -> Result<BSOption, OptionMissingBuildStepError> {
         match self {
             BSOptionBuilder {
                 time_curr: None, ..
-            } => Err(missing_build_step("with_time").into()),
+            } => Err(OptionMissingBuildStepError {
+                missing_step_name: "with_time".to_string(),
+            }),
 
             BSOptionBuilder {
                 time_maturity: None,
                 ..
-            } => Err(missing_build_step("with_time").into()),
+            } => Err(OptionMissingBuildStepError {
+                missing_step_name: "with_time".to_string(),
+            }),
 
             BSOptionBuilder {
                 time_to_maturity: None,
                 ..
-            } => Err(missing_build_step("with_time").into()),
+            } => Err(OptionMissingBuildStepError {
+                missing_step_name: "with_time".to_string(),
+            }),
 
             BSOptionBuilder {
                 asset_price: None, ..
-            } => Err(missing_build_step("with_asset_price").into()),
+            } => Err(OptionMissingBuildStepError {
+                missing_step_name: "with_asset_price".to_string(),
+            }),
 
-            BSOptionBuilder { strike: None, .. } => Err(missing_build_step("with_strike").into()),
+            BSOptionBuilder { strike: None, .. } => Err(OptionMissingBuildStepError {
+                missing_step_name: "with_strike".to_string(),
+            }),
 
-            BSOptionBuilder { interest: None, .. } => {
-                Err(missing_build_step("with_interest").into())
-            }
+            BSOptionBuilder { interest: None, .. } => Err(OptionMissingBuildStepError {
+                missing_step_name: "with_interest".to_string(),
+            }),
 
             BSOptionBuilder {
                 volatility: None, ..
-            } => Err(missing_build_step("with_volatility").into()),
+            } => Err(OptionMissingBuildStepError {
+                missing_step_name: "with_volatility".to_string(),
+            }),
 
             BSOptionBuilder {
                 time_curr: Some(time_curr),
