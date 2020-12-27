@@ -35,6 +35,7 @@ pub enum OptionType {
     Put,
 }
 
+#[wasm_bindgen]
 pub struct OptionTimeDefinition {
     time_curr: u32,
     time_maturity: u32,
@@ -237,6 +238,7 @@ impl BSOption {
     }
 }
 
+#[wasm_bindgen]
 #[derive(Debug, Clone)]
 pub struct OptionMissingBuildStepError {
     missing_step_name: String,
@@ -252,8 +254,7 @@ impl fmt::Display for OptionMissingBuildStepError {
     }
 }
 
-#[wasm_bindgen]
-#[derive(Default)]
+#[derive(Default, Copy, Clone)]
 pub struct BSOptionBuilder {
     time_curr: Option<u32>,
     time_maturity: Option<u32>,
@@ -386,6 +387,57 @@ impl BSOptionBuilder {
                 volatility,
                 payout_rate: self.payout_rate,
             }),
+        }
+    }
+}
+
+#[wasm_bindgen]
+pub struct WasmBSOptionBuilder {
+    _inner_builder: BSOptionBuilder,
+}
+
+#[wasm_bindgen]
+impl WasmBSOptionBuilder {
+    pub fn new() -> WasmBSOptionBuilder {
+        WasmBSOptionBuilder {
+            _inner_builder: BSOptionBuilder::new(),
+        }
+    }
+
+    pub fn with_asset_price(self, asset_price: f64) -> WasmBSOptionBuilder {
+        self._inner_builder.with_asset_price(asset_price);
+        self
+    }
+
+    pub fn with_strike(self, strike: f64) -> WasmBSOptionBuilder {
+        self._inner_builder.with_strike(strike);
+        self
+    }
+
+    pub fn with_time(self, opts: OptionTimeDefinition) -> WasmBSOptionBuilder {
+        self._inner_builder.with_time(opts);
+        self
+    }
+
+    pub fn with_volatility(self, volatility: f64) -> WasmBSOptionBuilder {
+        self._inner_builder.with_volatility(volatility);
+        self
+    }
+
+    pub fn with_interest(self, interest: f64) -> WasmBSOptionBuilder {
+        self._inner_builder.with_interest(interest);
+        self
+    }
+
+    pub fn with_payout_rate(self, payout_rate: f64) -> WasmBSOptionBuilder {
+        self._inner_builder.with_payout_rate(payout_rate);
+        self
+    }
+
+    pub fn create(self) -> Result<BSOption, JsValue> {
+        match self._inner_builder.create() {
+            Ok(option) => Ok(option),
+            Err(e) => Err(JsValue::from(e)),
         }
     }
 }
