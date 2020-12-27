@@ -107,7 +107,7 @@ impl BSOptionBuilder {
         }
     }
 
-    pub fn create(self) -> Result<BSOption, OptionMissingBuildStepError> {
+    pub fn finalize(self) -> Result<BSOption, OptionMissingBuildStepError> {
         match self {
             BSOptionBuilder {
                 time_curr: None, ..
@@ -178,6 +178,11 @@ pub struct WasmBSOptionBuilder {
 }
 
 #[wasm_bindgen]
+pub fn create_option() -> WasmBSOptionBuilder {
+    WasmBSOptionBuilder::new()
+}
+
+#[wasm_bindgen]
 impl WasmBSOptionBuilder {
     pub fn new() -> WasmBSOptionBuilder {
         WasmBSOptionBuilder {
@@ -220,8 +225,8 @@ impl WasmBSOptionBuilder {
         self
     }
 
-    pub fn create(self) -> Result<BSOption, JsValue> {
-        match self._inner_builder.create() {
+    pub fn finalize(self) -> Result<BSOption, JsValue> {
+        match self._inner_builder.finalize() {
             Ok(option) => Ok(option),
             Err(e) => Err(JsValue::from(e)),
         }
