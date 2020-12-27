@@ -122,20 +122,20 @@ function App() {
             <code className="header">OpCalc</code>
           </h1>
 
-          {loadErred || !outputs ? (
+          {loadErred ? (
             <span>An error occurred during calculation.</span>
           ) : (
             <>
               <div className="option-entry">
                 <span className="label">Call value</span>
                 <span className="content">
-                  {outputs.call.value.toFixed(DECIMAL_COUNT)}
+                  {outputs?.call.value.toFixed(DECIMAL_COUNT)}
                 </span>
               </div>
               <div className="option-entry">
                 <span className="label">Put value</span>
                 <span className="content">
-                  {outputs.put.value.toFixed(DECIMAL_COUNT)}
+                  {outputs?.put.value.toFixed(DECIMAL_COUNT)}
                 </span>
               </div>
             </>
