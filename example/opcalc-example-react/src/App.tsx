@@ -67,14 +67,17 @@ function computeOptionOutputs(
   });
 }
 
+enum OpCalcLoadStatus {
+  NotLoaded,
+  Loaded,
+  LoadErred,
+}
+
 const useOpCalc = (initialOptionInput: OptionDefinition) => {
-  const [{ instance: opcalc, loadErred }, setOpCalcModule] = useState<
-    | { instance: undefined; loadErred: boolean }
-    | {
-        instance: OpCalcType;
-        loadErred: false;
-      }
-  >({ instance: undefined, loadErred: false });
+  const [{ instance: opcalc, loadStatus }, setOpCalcModule] = useState<{
+    instance: OpCalcType | undefined;
+    loadStatus: OpCalcLoadStatus;
+  }>({ instance: undefined, loadStatus: OpCalcLoadStatus.NotLoaded });
 
   const [optionInput, updateInput] = useState<OptionDefinition>(
     initialOptionInput
@@ -87,10 +90,15 @@ const useOpCalc = (initialOptionInput: OptionDefinition) => {
   // load opcalc on launch
   useEffect(() => {
     import("opcalc")
-      .then((instance) => setOpCalcModule({ instance, loadErred: false }))
+      .then((instance) =>
+        setOpCalcModule({ instance, loadStatus: OpCalcLoadStatus.Loaded })
+      )
       .catch((e) => {
         console.error(e);
-        setOpCalcModule({ instance: undefined, loadErred: true });
+        setOpCalcModule({
+          instance: undefined,
+          loadStatus: OpCalcLoadStatus.LoadErred,
+        });
       });
   }, []);
 
@@ -106,7 +114,10 @@ const useOpCalc = (initialOptionInput: OptionDefinition) => {
     currentOptionInput: optionInput,
     updateInput,
     outputs: optionOutputs,
-    loadErred,
+    loadStatus: {
+      loaded: loadStatus === OpCalcLoadStatus.Loaded,
+      erred: loadStatus === OpCalcLoadStatus.LoadErred,
+    },
   };
 };
 
@@ -120,7 +131,7 @@ const initialOptionInput: OptionDefinition = {
 };
 
 function App() {
-  const { outputs, loadErred, currentOptionInput, updateInput } = useOpCalc(
+  const { outputs, loadStatus, currentOptionInput, updateInput } = useOpCalc(
     initialOptionInput
   );
 
@@ -134,12 +145,30 @@ function App() {
 
           <OptionInput input={currentOptionInput} onChange={updateInput} />
 
-          {loadErred ? <LoadErred /> : <OutputTable data={outputs} />}
+          {!loadStatus.loaded ? (
+            <Loading />
+          ) : loadStatus.erred ? (
+            <LoadErred />
+          ) : (
+            <OutputTable data={outputs} />
+          )}
         </section>
       </main>
     </div>
   );
 }
+
+const Loading: React.FC = () => {
+  return <span className="user-message">Loading option calculator...</span>;
+};
+
+const LoadErred: React.FC = () => {
+  return (
+    <span className="user-message">
+      An error has occurred during calculation.
+    </span>
+  );
+};
 
 const OptionInput: React.FC<{
   input: OptionDefinition;
@@ -230,10 +259,6 @@ const NumericInput: React.FC<{
       ></input>
     </div>
   );
-};
-
-const LoadErred: React.FC = () => {
-  return <span>An error has occurred during calculation.</span>;
 };
 
 const OutputTable: React.FC<{ data: CallPutOutputs | undefined }> = ({

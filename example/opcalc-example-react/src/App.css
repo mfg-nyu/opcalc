@@ -84,3 +84,9 @@ table.output td {
   line-height: 2;
   padding-left: 0.4rem;
 }
+
+span.user-message {
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+}
