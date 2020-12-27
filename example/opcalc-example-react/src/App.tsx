@@ -42,24 +42,14 @@ const useOpCalc = (initialOptionDef: OptionDefinition) => {
     console.log(optionDef);
 
     try {
-      // const option = opcalc.WasmBSOptionBuilder.new()
-      //   .with_asset_price(assetPrice)
-      //   .with_strike(strike)
-      //   .with_volatility(volatility)
-      //   .with_interest(interest)
-      //   .with_current_time(getSecondTimestamp(currTime))
-      //   .with_maturity_time(getSecondTimestamp(expiryTime))
-      //   .create();
-
-      const option = opcalc.BSOption.new(
-        getSecondTimestamp(currTime),
-        getSecondTimestamp(expiryTime),
-        assetPrice,
-        strike,
-        interest,
-        volatility,
-        0
-      );
+      const option = opcalc.WasmBSOptionBuilder.new()
+        .with_asset_price(assetPrice)
+        .with_strike(strike)
+        .with_volatility(volatility)
+        .with_interest(interest)
+        .with_current_time(getSecondTimestamp(currTime))
+        .with_maturity_time(getSecondTimestamp(expiryTime))
+        .create();
 
       return {
         call: {
