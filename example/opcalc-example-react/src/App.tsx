@@ -61,14 +61,15 @@ const useOpCalc = (initialOptionDef: OptionDefinition) => {
     } = optionDef;
 
     try {
-      const option = opcalc.WasmBSOptionBuilder.new()
+      const option = opcalc
+        .create_option()
         .with_asset_price(assetPrice)
         .with_strike(strike)
         .with_volatility(volatility)
         .with_interest(interest)
         .with_current_time(getSecondTimestamp(currTime))
         .with_maturity_time(getSecondTimestamp(expiryTime))
-        .create();
+        .finalize();
 
       return {
         call: {
