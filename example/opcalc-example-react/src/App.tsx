@@ -131,7 +131,7 @@ function App() {
 }
 
 const LoadErred: React.FC = () => {
-  return <span>An error occurred during calculation.</span>;
+  return <span>An error has occurred during calculation.</span>;
 };
 
 const OutputTable: React.FC<{ data: CallPutOutputs | undefined }> = ({
