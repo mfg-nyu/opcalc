@@ -2,11 +2,10 @@ extern crate approx;
 extern crate statrs;
 extern crate web_sys;
 
-mod opcalc;
-pub mod option_builder;
+pub mod option;
 mod utils;
 
-use crate::opcalc::op_calc;
+use crate::option::opcalc::op_calc;
 
 use statrs::distribution::{Normal, Univariate};
 use wasm_bindgen::prelude::*;
