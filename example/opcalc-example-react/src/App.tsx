@@ -139,6 +139,12 @@ const OptionInput: React.FC<{
   input: OptionDefinition;
   onChange: (input: OptionDefinition) => void;
 }> = ({ input, onChange: onInputChange }) => {
+  const daysBetweenDates = (start: Date, end: Date) => {
+    return Math.floor(
+      (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)
+    );
+  };
+
   return (
     <div className="option-input-container">
       <NumericInput
@@ -167,6 +173,19 @@ const OptionInput: React.FC<{
         input={input.volatility}
         step={0.01}
         onChange={(volatility) => onInputChange({ ...input, volatility })}
+      />
+
+      <NumericInput
+        name="Days to maturity"
+        input={daysBetweenDates(input.currTime, input.expiryTime)}
+        step={1}
+        min={0}
+        onChange={(newDayDiff) => {
+          const newExpiryTime = new Date(
+            input.currTime.getTime() + newDayDiff * 24 * 60 * 60 * 1000
+          );
+          onInputChange({ ...input, expiryTime: newExpiryTime });
+        }}
       />
     </div>
   );
