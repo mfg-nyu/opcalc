@@ -137,24 +137,44 @@ const LoadErred: React.FC = () => {
 const OutputTable: React.FC<{ data: CallPutOutputs | undefined }> = ({
   data,
 }) => {
+  return (
+    <table className="output">
+      <tbody>
+        <tr>
+          <th></th>
+          <th>Value</th>
+          <th>Delta</th>
+          <th>Gamma</th>
+          <th>Vega</th>
+          <th>Theta</th>
+        </tr>
+
+        <tr>
+          <th>Call</th>
+          <DataCell value={data?.call.value} />
+          <DataCell value={data?.call.delta} />
+          <DataCell value={data?.call.gamma} />
+          <DataCell value={data?.call.vega} />
+          <DataCell value={data?.call.theta} />
+        </tr>
+
+        <tr>
+          <th>Put</th>
+          <DataCell value={data?.put.value} />
+          <DataCell value={data?.put.delta} />
+          <DataCell value={data?.put.gamma} />
+          <DataCell value={data?.put.vega} />
+          <DataCell value={data?.put.theta} />
+        </tr>
+      </tbody>
+    </table>
+  );
+};
+
+const DataCell: React.FC<{ value: number | undefined }> = ({ value }) => {
   const DECIMAL_COUNT = 5;
 
-  return (
-    <>
-      <div className="option-entry">
-        <span className="label">Call value</span>
-        <span className="content">
-          {data?.call.value.toFixed(DECIMAL_COUNT)}
-        </span>
-      </div>
-      <div className="option-entry">
-        <span className="label">Put value</span>
-        <span className="content">
-          {data?.put.value.toFixed(DECIMAL_COUNT)}
-        </span>
-      </div>
-    </>
-  );
+  return <td>{value?.toFixed(DECIMAL_COUNT)}</td>;
 };
 
 export default App;

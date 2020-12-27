@@ -42,3 +42,12 @@ code.header {
 .option-entry .content {
   color: rgb(223, 223, 223);
 }
+
+table.output {
+  color: white;
+}
+
+table.output th,
+table.output td {
+  padding: 0.3rem 0.8rem;
+}
