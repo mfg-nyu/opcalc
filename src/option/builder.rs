@@ -168,33 +168,38 @@ impl WasmBSOptionBuilder {
         }
     }
 
-    pub fn with_asset_price(self, asset_price: f64) -> WasmBSOptionBuilder {
-        self._inner_builder.with_asset_price(asset_price);
+    pub fn with_asset_price(mut self, asset_price: f64) -> WasmBSOptionBuilder {
+        self._inner_builder = self._inner_builder.with_asset_price(asset_price);
         self
     }
 
-    pub fn with_strike(self, strike: f64) -> WasmBSOptionBuilder {
-        self._inner_builder.with_strike(strike);
+    pub fn with_strike(mut self, strike: f64) -> WasmBSOptionBuilder {
+        self._inner_builder = self._inner_builder.with_strike(strike);
         self
     }
 
-    pub fn with_time(self, opts: OptionTimeDefinition) -> WasmBSOptionBuilder {
-        self._inner_builder.with_time(opts);
+    pub fn with_current_time(mut self, time_curr: u32) -> WasmBSOptionBuilder {
+        self._inner_builder = self._inner_builder.with_current_time(time_curr);
         self
     }
 
-    pub fn with_volatility(self, volatility: f64) -> WasmBSOptionBuilder {
-        self._inner_builder.with_volatility(volatility);
+    pub fn with_maturity_time(mut self, time_maturity: u32) -> WasmBSOptionBuilder {
+        self._inner_builder = self._inner_builder.with_maturity_time(time_maturity);
         self
     }
 
-    pub fn with_interest(self, interest: f64) -> WasmBSOptionBuilder {
-        self._inner_builder.with_interest(interest);
+    pub fn with_volatility(mut self, volatility: f64) -> WasmBSOptionBuilder {
+        self._inner_builder = self._inner_builder.with_volatility(volatility);
         self
     }
 
-    pub fn with_payout_rate(self, payout_rate: f64) -> WasmBSOptionBuilder {
-        self._inner_builder.with_payout_rate(payout_rate);
+    pub fn with_interest(mut self, interest: f64) -> WasmBSOptionBuilder {
+        self._inner_builder = self._inner_builder.with_interest(interest);
+        self
+    }
+
+    pub fn with_payout_rate(mut self, payout_rate: f64) -> WasmBSOptionBuilder {
+        self._inner_builder = self._inner_builder.with_payout_rate(payout_rate);
         self
     }
 
