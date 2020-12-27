@@ -278,30 +278,31 @@ const OutputTable: React.FC<{ data: CallPutOutputs | undefined }> = ({
 
         <tr>
           <th>Call</th>
-          <DataCell value={data?.call.value} />
-          <DataCell value={data?.call.delta} />
-          <DataCell value={data?.call.gamma} />
-          <DataCell value={data?.call.vega} />
-          <DataCell value={data?.call.theta} />
+          <DecimalCell value={data?.call.value} />
+          <DecimalCell value={data?.call.delta} />
+          <DecimalCell value={data?.call.gamma} />
+          <DecimalCell value={data?.call.vega} />
+          <DecimalCell value={data?.call.theta} />
         </tr>
 
         <tr>
           <th>Put</th>
-          <DataCell value={data?.put.value} />
-          <DataCell value={data?.put.delta} />
-          <DataCell value={data?.put.gamma} />
-          <DataCell value={data?.put.vega} />
-          <DataCell value={data?.put.theta} />
+          <DecimalCell value={data?.put.value} />
+          <DecimalCell value={data?.put.delta} />
+          <DecimalCell value={data?.put.gamma} />
+          <DecimalCell value={data?.put.vega} />
+          <DecimalCell value={data?.put.theta} />
         </tr>
       </tbody>
     </table>
   );
 };
 
-const DataCell: React.FC<{ value: number | undefined }> = ({ value }) => {
-  const DECIMAL_COUNT = 5;
-
-  return <td>{value?.toFixed(DECIMAL_COUNT)}</td>;
+const DecimalCell: React.FC<{
+  value: number | undefined;
+  decimalCount?: number;
+}> = ({ value, decimalCount = 5 }) => {
+  return <td>{value?.toFixed(decimalCount)}</td>;
 };
 
 export default App;
