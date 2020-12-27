@@ -5,6 +5,8 @@ const getSecondTimestamp = (dt: Date): number => {
   return Math.floor(dt.getTime() / 1000);
 };
 
+type OpCalcType = typeof import("opcalc");
+
 interface OptionDefinition {
   assetPrice: number;
   strike: number;
@@ -27,8 +29,39 @@ interface CallPutOutputs {
   put: OptionOutputs;
 }
 
+function computeOptionOutputs(
+  input: OptionDefinition,
+  opcalc: OpCalcType
+): CallPutOutputs {
+  const option = opcalc
+    .create_option()
+    .with_asset_price(input.assetPrice)
+    .with_strike(input.strike)
+    .with_volatility(input.volatility)
+    .with_interest(input.interest)
+    .with_current_time(getSecondTimestamp(input.currTime))
+    .with_maturity_time(getSecondTimestamp(input.expiryTime))
+    .finalize();
+
+  return {
+    call: {
+      value: option.call_value(),
+      delta: option.call_delta(),
+      gamma: option.call_gamma(),
+      vega: option.call_vega(),
+      theta: option.call_theta(),
+    },
+    put: {
+      value: option.put_value(),
+      delta: option.put_delta(),
+      gamma: option.put_gamma(),
+      vega: option.put_vega(),
+      theta: option.put_theta(),
+    },
+  };
+}
+
 const useOpCalc = (initialOptionDef: OptionDefinition) => {
-  type OpCalcType = typeof import("opcalc");
   const [{ instance: opcalc, loadErred }, setOpCalcModule] = useState<
     | { instance: undefined; loadErred: boolean }
     | {
@@ -54,42 +87,8 @@ const useOpCalc = (initialOptionDef: OptionDefinition) => {
   const outputs = useMemo<CallPutOutputs | undefined>(() => {
     if (!opcalc) return;
 
-    const {
-      assetPrice,
-      strike,
-      volatility,
-      interest,
-      currTime,
-      expiryTime,
-    } = optionDef;
-
     try {
-      const option = opcalc
-        .create_option()
-        .with_asset_price(assetPrice)
-        .with_strike(strike)
-        .with_volatility(volatility)
-        .with_interest(interest)
-        .with_current_time(getSecondTimestamp(currTime))
-        .with_maturity_time(getSecondTimestamp(expiryTime))
-        .finalize();
-
-      return {
-        call: {
-          value: option.call_value(),
-          delta: option.call_delta(),
-          gamma: option.call_gamma(),
-          vega: option.call_vega(),
-          theta: option.call_theta(),
-        },
-        put: {
-          value: option.put_value(),
-          delta: option.put_delta(),
-          gamma: option.put_gamma(),
-          vega: option.put_vega(),
-          theta: option.put_theta(),
-        },
-      };
+      return computeOptionOutputs(optionDef, opcalc);
     } catch (error) {
       console.error(error);
       return;
