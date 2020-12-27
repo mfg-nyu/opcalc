@@ -1,16 +1,25 @@
 # Contributing
 
-## Packaging
+## Installing `wasm-pack`
 
-After building the package and before publishing, remember to add this line
-under 'files' in 'pkg/package.json':
+**Revisit this section when `wasm-pack` releases a version newer than `v0.9.1`**.
 
-```txt
-    "*_bg.js",
-    "*_bg.d.ts",
+The latest `wasm-pack` version (`v0.9.1`) includes a bug that omits `*_bg.js`
+and `*_bg.d.ts` files in the generated JS package.
+
+This issue has been fixed in `wasm-pack`'s latest commits, but it has not been
+published to a new version.
+
+As a temporary fix, install `wasm-pack` from the latest GitHub source tree,
+like so:
+
+```sh
+# do this
+cargo install --git https://github.com/rustwasm/wasm-pack.git
+
+# not this
+cargo install wasm-pack
 ```
 
-This is a known issue in `wasm-pack`, which neglects to publish any `*_bg.js`
-files.
-
+This is a known issue in `wasm-pack`.
 See: <https://github.com/rustwasm/wasm-pack/issues/837>.
