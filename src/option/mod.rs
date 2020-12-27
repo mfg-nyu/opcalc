@@ -60,8 +60,6 @@ impl BSOption {
         option
     }
 
-    /// Option derived property getters (they're read-only)
-
     pub fn call_value(&self) -> f64 {
         op_calc::calculate_option_values(self).call
     }
@@ -135,8 +133,6 @@ impl BSOption {
     pub fn payout_rate(&self) -> f64 {
         return self.payout_rate;
     }
-
-    /// Option intrinsic property setters
 
     #[allow(dead_code)]
     fn set_time_curr(&mut self, new_time_curr: u32) {
