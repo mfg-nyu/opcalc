@@ -201,7 +201,7 @@ const NumericInput: React.FC<{
 }> = ({
   name,
   input,
-  min = -Infinity,
+  min = Number.NEGATIVE_INFINITY,
   max = Number.POSITIVE_INFINITY,
   step = 1,
   onChange,
