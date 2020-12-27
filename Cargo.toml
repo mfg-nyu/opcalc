@@ -44,6 +44,8 @@ features = [
 wasm-bindgen-test = "0.3.13"
 
 [profile.release]
+# enable link-time optimization
+lto = true
 # Tell `rustc` to optimize for small code size.
 opt-level = "s"
 
