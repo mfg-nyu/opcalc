@@ -15,6 +15,10 @@ main {
 
 section.demo-body {
   margin-bottom: 10vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 }
 
 code.header {
@@ -50,4 +54,21 @@ table.output {
 table.output th,
 table.output td {
   padding: 0.3rem 0.8rem;
+}
+
+.option-input-container {
+  margin: 1rem 0;
+}
+
+.form-entry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.form-entry label {
+  color: white;
+  font-weight: bold;
+  margin-right: 1rem;
+  min-width: 5rem;
 }

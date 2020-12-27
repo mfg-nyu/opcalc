@@ -97,6 +97,7 @@ const useOpCalc = (initialOptionDef: OptionDefinition) => {
   }, [opcalc, optionDef]);
 
   return {
+    currentOptionDef: optionDef,
     setOptionDef,
     outputs,
     loadErred,
@@ -113,7 +114,9 @@ const optionDef: OptionDefinition = {
 };
 
 function App() {
-  const { outputs, loadErred } = useOpCalc(optionDef);
+  const { outputs, loadErred, currentOptionDef, setOptionDef } = useOpCalc(
+    optionDef
+  );
 
   return (
     <div className="App">
@@ -123,12 +126,86 @@ function App() {
             <code className="header">OpCalc</code>
           </h1>
 
+          <OptionInput input={currentOptionDef} onChange={setOptionDef} />
+
           {loadErred ? <LoadErred /> : <OutputTable data={outputs} />}
         </section>
       </main>
     </div>
   );
 }
+
+const OptionInput: React.FC<{
+  input: OptionDefinition;
+  onChange: (input: OptionDefinition) => void;
+}> = ({ input, onChange: onInputChange }) => {
+  return (
+    <div className="option-input-container">
+      <NumericInput
+        name="Asset Price"
+        input={input.assetPrice}
+        min={0}
+        onChange={(assetPrice) => onInputChange({ ...input, assetPrice })}
+      />
+
+      <NumericInput
+        name="Strike Price"
+        input={input.strike}
+        min={0}
+        onChange={(strike) => onInputChange({ ...input, strike })}
+      />
+
+      <NumericInput
+        name="Interest Rate"
+        input={input.interest}
+        step={0.001}
+        onChange={(interest) => onInputChange({ ...input, interest })}
+      />
+
+      <NumericInput
+        name="Volatility"
+        input={input.volatility}
+        step={0.01}
+        onChange={(volatility) => onInputChange({ ...input, volatility })}
+      />
+    </div>
+  );
+};
+
+const NumericInput: React.FC<{
+  name: string;
+  input: number;
+  min?: number;
+  max?: number;
+  step?: number;
+  onChange: (newValue: number) => unknown;
+}> = ({
+  name,
+  input,
+  min = -Infinity,
+  max = Number.POSITIVE_INFINITY,
+  step = 1,
+  onChange,
+}) => {
+  const formatInputId = (inputName: string) => {
+    return "option-input-form__" + inputName.toLowerCase().split(" ").join("-");
+  };
+
+  return (
+    <div className="form-entry">
+      <label htmlFor={formatInputId(name)}>{name}</label>
+      <input
+        type="number"
+        id={formatInputId(name)}
+        min={min}
+        max={max}
+        step={step}
+        value={input}
+        onChange={(e) => onChange(Number.parseFloat(e.target.value))}
+      ></input>
+    </div>
+  );
+};
 
 const LoadErred: React.FC = () => {
   return <span>An error has occurred during calculation.</span>;
