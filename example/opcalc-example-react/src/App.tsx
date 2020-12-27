@@ -83,19 +83,29 @@ const optionDef: OptionDefinition = {
 function App() {
   const { outputs } = useOpCalc(optionDef);
 
+  const DECIMAL_COUNT = 5;
+
   return (
     <div className="App">
       <main>
-        <div>
+        <section className="demo-body">
+          <h1>
+            <code className="header">OpCalc</code>
+          </h1>
+
           <div className="option-entry">
             <span className="label">Call value</span>
-            <span className="content">{outputs.call?.value}</span>
+            <span className="content">
+              {outputs.call?.value.toFixed(DECIMAL_COUNT)}
+            </span>
           </div>
           <div className="option-entry">
             <span className="label">Put value</span>
-            <span className="content">{outputs.put?.value}</span>
+            <span className="content">
+              {outputs.put?.value.toFixed(DECIMAL_COUNT)}
+            </span>
           </div>
-        </div>
+        </section>
       </main>
     </div>
   );

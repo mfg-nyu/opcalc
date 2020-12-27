@@ -2,6 +2,7 @@
   text-align: center;
   height: 100%;
   min-height: 100vh;
+  background-color: #00005d;
 }
 
 main {
@@ -10,6 +11,15 @@ main {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+section.demo-body {
+  margin-bottom: 10vh;
+}
+
+code.header {
+  color: white;
+  font-size: 2rem;
 }
 
 .option-entry {
@@ -26,8 +36,9 @@ main {
   font-weight: bold;
   min-width: 4rem;
   font-size: 1rem;
+  color: white;
 }
 
 .option-entry .content {
-  color: rgb(44, 44, 44);
+  color: rgb(223, 223, 223);
 }
