@@ -52,18 +52,35 @@ impl BSOptionBuilder {
         }
     }
 
-    pub fn with_time(self, opts: OptionTimeDefinition) -> BSOptionBuilder {
-        match opts {
-            OptionTimeDefinition {
-                time_curr,
-                time_maturity,
-            } => BSOptionBuilder {
+    pub fn with_current_time(self, time_curr: u32) -> BSOptionBuilder {
+        match self.time_maturity {
+            Some(time_maturity) => BSOptionBuilder {
                 time_curr: Some(time_curr),
+                time_to_maturity: Some(BSOption::calc_time_to_maturity(OptionTimeDefinition {
+                    time_curr,
+                    time_maturity,
+                })),
+                ..self
+            },
+            None => BSOptionBuilder {
+                time_curr: Some(time_curr),
+                ..self
+            },
+        }
+    }
+
+    pub fn with_maturity_time(self, time_maturity: u32) -> BSOptionBuilder {
+        match self.time_curr {
+            Some(time_curr) => BSOptionBuilder {
                 time_maturity: Some(time_maturity),
                 time_to_maturity: Some(BSOption::calc_time_to_maturity(OptionTimeDefinition {
                     time_curr,
                     time_maturity,
                 })),
+                ..self
+            },
+            None => BSOptionBuilder {
+                time_maturity: Some(time_maturity),
                 ..self
             },
         }
@@ -95,21 +112,21 @@ impl BSOptionBuilder {
             BSOptionBuilder {
                 time_curr: None, ..
             } => Err(OptionMissingBuildStepError {
-                missing_step_name: "with_time".to_string(),
+                missing_step_name: "with_current_time".to_string(),
             }),
 
             BSOptionBuilder {
                 time_maturity: None,
                 ..
             } => Err(OptionMissingBuildStepError {
-                missing_step_name: "with_time".to_string(),
+                missing_step_name: "with_maturity_time".to_string(),
             }),
 
             BSOptionBuilder {
                 time_to_maturity: None,
                 ..
             } => Err(OptionMissingBuildStepError {
-                missing_step_name: "with_time".to_string(),
+                missing_step_name: "with_maturity_time | with_current_time".to_string(),
             }),
 
             BSOptionBuilder {
