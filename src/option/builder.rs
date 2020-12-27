@@ -18,7 +18,7 @@ impl fmt::Display for OptionMissingBuildStepError {
     }
 }
 
-#[derive(Default, Copy, Clone)]
+#[derive(Default, Debug, Copy, Clone)]
 pub struct BSOptionBuilder {
     time_curr: Option<u32>,
     time_maturity: Option<u32>,
