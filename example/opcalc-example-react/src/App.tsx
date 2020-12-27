@@ -14,6 +14,14 @@ interface OptionDefinition {
   expiryTime: Date;
 }
 
+interface OptionOutputs {
+  value: number;
+  delta: number;
+  gamma: number;
+  vega: number;
+  theta: number;
+}
+
 const useOpCalc = (initialOptionDef: OptionDefinition) => {
   type OpCalcType = typeof import("opcalc");
   const [opcalc, setOpCalc] = useState<OpCalcType | undefined>(undefined);
@@ -28,8 +36,11 @@ const useOpCalc = (initialOptionDef: OptionDefinition) => {
       .catch((e) => console.error(e));
   }, []);
 
-  const outputs = useMemo(() => {
-    if (!opcalc) return {};
+  const outputs = useMemo<
+    { call: OptionOutputs; put: OptionOutputs } | undefined
+  >(() => {
+    if (!opcalc) return;
+
     const {
       assetPrice,
       strike,
@@ -54,14 +65,22 @@ const useOpCalc = (initialOptionDef: OptionDefinition) => {
       return {
         call: {
           value: option.call_value(),
+          delta: option.call_delta(),
+          gamma: option.call_gamma(),
+          vega: option.call_vega(),
+          theta: option.call_theta(),
         },
         put: {
           value: option.put_value(),
+          delta: option.put_delta(),
+          gamma: option.put_gamma(),
+          vega: option.put_vega(),
+          theta: option.put_theta(),
         },
       };
     } catch (error) {
       console.error(error);
-      return {};
+      return;
     }
   }, [opcalc, optionDef]);
 
@@ -96,13 +115,13 @@ function App() {
           <div className="option-entry">
             <span className="label">Call value</span>
             <span className="content">
-              {outputs.call?.value.toFixed(DECIMAL_COUNT)}
+              {outputs?.call.value.toFixed(DECIMAL_COUNT)}
             </span>
           </div>
           <div className="option-entry">
             <span className="label">Put value</span>
             <span className="content">
-              {outputs.put?.value.toFixed(DECIMAL_COUNT)}
+              {outputs?.put.value.toFixed(DECIMAL_COUNT)}
             </span>
           </div>
         </section>
