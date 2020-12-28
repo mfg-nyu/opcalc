@@ -1,3 +1,5 @@
+//! Implements Black-Scholes related calculation logic.
+
 pub mod op_calc {
     use crate::option::BSOption;
 
