@@ -1,8 +1,8 @@
 pub mod builder;
 mod opcalc;
 
+use self::opcalc::op_calc;
 use crate::utils;
-use opcalc::op_calc;
 use statrs::distribution::{Normal, Univariate};
 use wasm_bindgen::prelude::*;
 
@@ -32,6 +32,66 @@ pub struct BSOption {
 
 #[wasm_bindgen]
 impl BSOption {
+    /// Creates a BSOption instance.
+    ///
+    /// Also see `create_option()` for a more convenient option creation process.
+    ///
+    /// # Arguments
+    ///
+    /// - `time_curr`: A timestamp in seconds. This specifies the time when
+    ///      option calculations should be based on.
+    ///
+    /// - `time_maturity`: A timestamp in seconds. This specifies the maturity
+    ///     time of this option.
+    ///
+    /// - `asset_price`: Specifies the underlying's current price.
+    ///
+    /// - `strike`: Specifies the option's strike price.
+    ///
+    /// - `interest`: Specifies the prevailing interest rate under which this
+    ///      option should be priced. The number should be provided in a
+    ///      decimal form (e.g. `0.006` for '0.6%').
+    ///
+    /// - `volatility`: Specify an implied volatility used in pricing this
+    ///      option. The number should be provided in a decimal form (e.g.
+    ///      provide `0.2398` for '23.98%').
+    ///
+    /// - `payout_rate`: Optional. Specify a payout rate used in pricing this
+    ///      option. Defaults to `0.0`.
+    ///
+    /// # Examples
+    ///
+    /// ## Creating an option in rust
+    ///
+    /// ```rust
+    /// use opcalc::option::BSOption;
+    ///
+    /// let option = BSOption::new(
+    ///   1_606_780_800, // time_curr, 2020/12/01 00:00:00
+    ///   1_610_668_800, // time_maturity, 2021/01/15 00:00:00
+    ///   100.0,         // asset_price
+    ///   105.0,         // strike
+    ///   0.005,         // interest
+    ///   0.23,          // volatility
+    ///   0.0            // payout_rate
+    /// );
+    /// ```
+    ///
+    /// ## Creating an option in JS
+    ///
+    /// ```js
+    /// // import opcalc asynchronously
+    ///
+    /// const option = opcalc.BSOption.new(
+    ///   1606780800,    // time_curr, 2020/12/01 00:00:00
+    ///   1610668800,    // time_maturity, 2021/01/15 00:00:00
+    ///   100,           // asset_price
+    ///   105,           // strike
+    ///   0.005,         // interest
+    ///   0.23,          // volatility
+    ///   0              // payout_rate
+    /// )
+    /// ```
     pub fn new(
         time_curr: u32,
         time_maturity: u32,
