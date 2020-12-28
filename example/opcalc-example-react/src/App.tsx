@@ -73,21 +73,16 @@ enum OpCalcLoadStatus {
   LoadErred,
 }
 
-const useOpCalc = (initialOptionInput: OptionDefinition) => {
+/** Load the `opcalc` module, or report loading error status. */
+const useOpCalcModuleImport = () => {
   const [{ instance: opcalc, loadStatus }, setOpCalcModule] = useState<{
     instance: OpCalcType | undefined;
     loadStatus: OpCalcLoadStatus;
   }>({ instance: undefined, loadStatus: OpCalcLoadStatus.NotLoaded });
 
-  const [optionInput, updateInput] = useState<OptionDefinition>(
-    initialOptionInput
-  );
-
-  const [optionOutputs, setOptionOutputs] = useState<
-    CallPutOutputs | undefined
-  >(undefined);
-
-  // load opcalc on launch
+  // use the 'opcalc' string literal here to prevent a webpack bundle splitting
+  // bailout. Imports with variable path names cannot be statically analyzed
+  // and therefore cannot be used for webpack optimizations.
   useEffect(() => {
     import("opcalc")
       .then((instance) =>
@@ -102,6 +97,26 @@ const useOpCalc = (initialOptionInput: OptionDefinition) => {
       });
   }, []);
 
+  return {
+    opcalc,
+    loadStatus: {
+      loaded: loadStatus === OpCalcLoadStatus.Loaded,
+      erred: loadStatus === OpCalcLoadStatus.LoadErred,
+    },
+  };
+};
+
+const useOpCalc = (initialOptionInput: OptionDefinition) => {
+  const { opcalc, loadStatus } = useOpCalcModuleImport();
+
+  const [optionInput, updateInput] = useState<OptionDefinition>(
+    initialOptionInput
+  );
+
+  const [optionOutputs, setOptionOutputs] = useState<
+    CallPutOutputs | undefined
+  >(undefined);
+
   useEffect(() => {
     if (!opcalc) return;
 
@@ -114,10 +129,7 @@ const useOpCalc = (initialOptionInput: OptionDefinition) => {
     currentOptionInput: optionInput,
     updateInput,
     outputs: optionOutputs,
-    loadStatus: {
-      loaded: loadStatus === OpCalcLoadStatus.Loaded,
-      erred: loadStatus === OpCalcLoadStatus.LoadErred,
-    },
+    loadStatus,
   };
 };
 
