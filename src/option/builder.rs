@@ -179,7 +179,7 @@ pub struct WasmBSOptionBuilder {
 
 /// Creates a `BSOption` instance.
 ///
-/// The order of invoking the `with_*()` build step methods do not matter.
+/// The order of invoking the `with_*()` build step methods does not matter.
 ///
 /// # Example
 ///
