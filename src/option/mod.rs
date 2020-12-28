@@ -17,6 +17,13 @@ pub struct OptionTimeDefinition {
     time_maturity: u32,
 }
 
+/// A Black-Scholes option.
+///
+/// Contains properties such as maturity time, strike price, and more necessary
+/// for Black-Scholes calculation.
+///
+/// See the static `new()` method and `create_option()` for how to instantiate
+/// a `BSOption` instance.
 #[wasm_bindgen]
 #[derive(Copy, Clone, Debug)]
 pub struct BSOption {
