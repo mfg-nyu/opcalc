@@ -177,6 +177,50 @@ pub struct WasmBSOptionBuilder {
     _inner_builder: BSOptionBuilder,
 }
 
+/// Creates a `BSOption` instance.
+///
+/// The order of invoking the `with_*()` build step methods do not matter.
+///
+/// # Example
+///
+/// ## Using in Rust
+///
+/// ```rust
+/// use opcalc::option::builder::create_option;
+///
+/// let option = create_option()
+///     .with_asset_price(100.0)
+///     .with_strike(105.0)
+///     .with_interest(0.008)
+///     .with_volatility(0.23)
+///     .with_current_time(1_606_780_800) // timestamp in seconds: 2020/12/01 00:00:00
+///     .with_maturity_time(1_610_668_800) // timestamp in seconds: 2021/01/15 00:00:00
+///     .finalize()
+///     .unwrap();  // safely unwrap here because all required builder steps are taken
+///
+/// // then, use this option to obtain calculation results
+/// let gamma = option.call_gamma();
+/// // ...
+/// ```
+///
+/// ## Using in JS
+///
+/// ```javascript
+/// // import opcalc here
+///
+/// const option = opcalc.create_option()
+///     .with_asset_price(100)
+///     .with_strike(105)
+///     .with_interest(0.008)
+///     .with_volatility(0.23)
+///     .with_current_time(1606780800) // timestamp in seconds: 2020/12/01 00:00:00
+///     .with_maturity_time(1610668800) // timestamp in seconds: 2021/01/15 00:00:00
+///     .finalize();
+///
+/// // then, use this option to obtain calculation results
+/// const gamma = option.call_gamma();
+/// // ...
+/// ```
 #[wasm_bindgen]
 pub fn create_option() -> WasmBSOptionBuilder {
     WasmBSOptionBuilder::new()
