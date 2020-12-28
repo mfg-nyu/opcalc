@@ -1,3 +1,5 @@
+//! Implements a Builder to create `BSOption` more conveniently.
+
 use crate::option::{BSOption, OptionTimeDefinition};
 use std::fmt;
 use wasm_bindgen::prelude::*;
