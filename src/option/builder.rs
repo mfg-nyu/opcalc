@@ -4,6 +4,8 @@ use crate::option::{BSOption, OptionTimeDefinition};
 use std::fmt;
 use wasm_bindgen::prelude::*;
 
+/// An error that indicates the caller did not call all required build
+/// functions for `BSOptionBuilder`.
 #[wasm_bindgen]
 #[derive(Debug, Clone)]
 pub struct OptionMissingBuildStepError {
