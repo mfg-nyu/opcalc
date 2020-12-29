@@ -110,7 +110,7 @@ impl BSOption {
     ) -> BSOption {
         utils::set_panic_hook();
 
-        let option = BSOption {
+        BSOption {
             time_curr,
             time_maturity,
             time_to_maturity: Self::calc_time_to_maturity(OptionTimeDefinition {
@@ -122,9 +122,7 @@ impl BSOption {
             interest,
             volatility,
             payout_rate,
-        };
-
-        option
+        }
     }
 
     pub fn call_value(&self) -> f64 {
@@ -168,35 +166,35 @@ impl BSOption {
     }
 
     pub fn time_curr(&self) -> u32 {
-        return self.time_curr;
+        self.time_curr
     }
 
     pub fn time_maturity(&self) -> u32 {
-        return self.time_maturity;
+        self.time_maturity
     }
 
     pub fn time_to_maturity(&self) -> f64 {
-        return self.time_to_maturity;
+        self.time_to_maturity
     }
 
     pub fn asset_price(&self) -> f64 {
-        return self.asset_price;
+        self.asset_price
     }
 
     pub fn strike(&self) -> f64 {
-        return self.strike;
+        self.strike
     }
 
     pub fn interest(&self) -> f64 {
-        return self.interest;
+        self.interest
     }
 
     pub fn volatility(&self) -> f64 {
-        return self.volatility;
+        self.volatility
     }
 
     pub fn payout_rate(&self) -> f64 {
-        return self.payout_rate;
+        self.payout_rate
     }
 
     pub fn set_time_curr(&mut self, new_time_curr: u32) {
@@ -261,8 +259,7 @@ impl BSOption {
 
     fn calc_time_to_maturity(time_def: OptionTimeDefinition) -> f64 {
         const TIMESTAMP_ONE_YEAR: f64 = 31_536_000.0;
-        let ttm = ((time_def.time_maturity - time_def.time_curr) as f64) / TIMESTAMP_ONE_YEAR;
 
-        ttm
+        ((time_def.time_maturity - time_def.time_curr) as f64) / TIMESTAMP_ONE_YEAR
     }
 }
