@@ -1,6 +1,6 @@
 use web_sys::console;
 
-// A macro to provide `println!(..)`-style syntax for `console.log` logging.
+/// A macro to provide `println!(..)`-style syntax for `console.log` logging.
 #[allow(unused_macros)]
 #[macro_export]
 macro_rules! log {
