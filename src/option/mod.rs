@@ -125,78 +125,106 @@ impl BSOption {
         }
     }
 
+    /// Get the option's call value.
     pub fn call_value(&self) -> f64 {
         op_calc::calculate_option_values(self).call
     }
 
+    /// Get the option's call delta value.
     pub fn call_delta(&self) -> f64 {
         op_calc::calculate_deltas(self).call
     }
 
+    /// Get the option's call gamma value.
     pub fn call_gamma(&self) -> f64 {
         op_calc::calculate_gammas(self).call
     }
 
+    /// Get the option's call vega value.
     pub fn call_vega(&self) -> f64 {
         op_calc::calculate_vegas(self).call
     }
 
+    /// Get the option's call theta value.
     pub fn call_theta(&self) -> f64 {
         op_calc::calculate_thetas(self).call
     }
 
+    /// Get the option's put value.
     pub fn put_value(&self) -> f64 {
         op_calc::calculate_option_values(self).put
     }
 
+    /// Get the option's put delta value.
     pub fn put_delta(&self) -> f64 {
         op_calc::calculate_deltas(self).put
     }
 
+    /// Get the option's put gamma value.
     pub fn put_gamma(&self) -> f64 {
         op_calc::calculate_gammas(self).put
     }
 
+    /// Get the option's put vega value.
     pub fn put_vega(&self) -> f64 {
         op_calc::calculate_vegas(self).put
     }
 
+    /// Get the option's put theta value.
     pub fn put_theta(&self) -> f64 {
         op_calc::calculate_thetas(self).put
     }
 
+    /// Get the option's time at which calculation is based.
+    /// The time's unit is second-based timestamp.
     pub fn time_curr(&self) -> u32 {
         self.time_curr
     }
 
+    /// Get the option's specified maturity time.
+    /// The time's unit is second-based timestamp.
     pub fn time_maturity(&self) -> u32 {
         self.time_maturity
     }
 
+    /// Get the option's time to maturity.
+    /// Time to maturity is specified as a fraction of 365 days.
+    /// For instance, 33 days to maturity has a time to maturity of `0.090410959`.
     pub fn time_to_maturity(&self) -> f64 {
         self.time_to_maturity
     }
 
+    /// Get the option's specified asset price.
     pub fn asset_price(&self) -> f64 {
         self.asset_price
     }
 
+    /// Get the option's specified strike price.
     pub fn strike(&self) -> f64 {
         self.strike
     }
 
+    /// Get the option's specified interest rate.
     pub fn interest(&self) -> f64 {
         self.interest
     }
 
+    /// Get the option's specified implied volatility.
     pub fn volatility(&self) -> f64 {
         self.volatility
     }
 
+    /// Get the option's specified payout rate.
     pub fn payout_rate(&self) -> f64 {
         self.payout_rate
     }
 
+    /// Update the time at which the option's calculation is based.
+    ///
+    /// **Arguments:**
+    ///
+    /// - `new_time_curr`: a timestamp, in seconds, that represents the updated
+    ///     time to perform option calcultions at.
     pub fn set_time_curr(&mut self, new_time_curr: u32) {
         self.time_curr = new_time_curr;
         self.time_to_maturity = Self::calc_time_to_maturity(OptionTimeDefinition {
@@ -205,6 +233,12 @@ impl BSOption {
         });
     }
 
+    /// Update the option's maturity time.
+    ///
+    /// **Arguments:**
+    ///
+    /// - `new_time_maturity`: a timestamp, in seconds, that is the option's
+    ///      time of maturity.
     pub fn set_time_maturity(&mut self, new_time_maturity: u32) {
         self.time_maturity = new_time_maturity;
         self.time_to_maturity = Self::calc_time_to_maturity(OptionTimeDefinition {
@@ -213,18 +247,38 @@ impl BSOption {
         });
     }
 
+    /// Update the option's asset price.
+    ///
+    /// **Arguments:**
+    ///
+    /// - `new_asset_price`: the option's new asset price.
     pub fn set_asset_price(&mut self, new_asset_price: f64) {
         self.asset_price = new_asset_price;
     }
 
+    /// Update the option's strike price.
+    ///
+    /// **Arguments:**
+    ///
+    /// - `new_strike`: the option's new strike price.
     pub fn set_strike(&mut self, new_strike: f64) {
         self.strike = new_strike;
     }
 
+    /// Update the option's volatility that will be used for calculation.
+    ///
+    /// **Arguments:**
+    ///
+    /// - `new_volatility`: the option's new volatility.
     pub fn set_volatility(&mut self, new_volatility: f64) {
         self.volatility = new_volatility;
     }
 
+    /// Update the option's payout rate.
+    ///
+    /// **Arguments:**
+    ///
+    /// - `new_payout_rate`: the option's new payout rate.
     pub fn set_payout_rate(&mut self, new_payout_rate: f64) {
         self.payout_rate = new_payout_rate;
     }
