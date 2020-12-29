@@ -22,6 +22,34 @@ impl fmt::Display for OptionMissingBuildStepError {
     }
 }
 
+/// Builds a `BSOption` instance.
+///
+/// This struct provides useful build step functions to create a BSOption,
+/// progressively defining a `BSOption`'s properties as more build step
+/// functions are called.
+///
+/// *Note*: **Rust only**. This API is exposed only for Rust. To use a builder
+/// in JavaScript, use `create_option()`.
+///
+/// ## Using in Rust
+///
+/// ```rust
+/// use opcalc::option::builder::BSOptionBuilder;
+///
+/// let option = BSOptionBuilder::new()
+///     .with_asset_price(100.0)
+///     .with_strike(105.0)
+///     .with_interest(0.008)
+///     .with_volatility(0.23)
+///     .with_current_time(1_606_780_800) // timestamp in seconds: 2020/12/01 00:00:00
+///     .with_maturity_time(1_610_668_800) // timestamp in seconds: 2021/01/15 00:00:00
+///     .finalize()
+///     .unwrap();  // safely unwrap here because all required builder steps are taken
+///
+/// // then, use this option to obtain calculation results
+/// let gamma = option.call_gamma();
+/// // ...
+/// ```
 #[derive(Default, Debug, Copy, Clone)]
 pub struct BSOptionBuilder {
     time_curr: Option<u32>,
@@ -186,27 +214,9 @@ pub struct WasmBSOptionBuilder {
 ///
 /// The order of invoking the `with_*()` build step methods does not matter.
 ///
-/// # Example
-///
-/// ## Using in Rust
-///
-/// ```rust
-/// use opcalc::option::builder::create_option;
-///
-/// let option = create_option()
-///     .with_asset_price(100.0)
-///     .with_strike(105.0)
-///     .with_interest(0.008)
-///     .with_volatility(0.23)
-///     .with_current_time(1_606_780_800) // timestamp in seconds: 2020/12/01 00:00:00
-///     .with_maturity_time(1_610_668_800) // timestamp in seconds: 2021/01/15 00:00:00
-///     .finalize()
-///     .unwrap();  // safely unwrap here because all required builder steps are taken
-///
-/// // then, use this option to obtain calculation results
-/// let gamma = option.call_gamma();
-/// // ...
-/// ```
+/// *Note*: **JS only**. This API is created for the library's WebAssembly
+/// bindings. To use a builder to create an option in Rust,
+/// see `BSOptionBuilder`.
 ///
 /// ## Using in JS
 ///
