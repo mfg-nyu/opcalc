@@ -175,6 +175,7 @@ impl BSOptionBuilder {
 }
 
 #[wasm_bindgen]
+#[derive(Default)]
 pub struct WasmBSOptionBuilder {
     _inner_builder: BSOptionBuilder,
 }
