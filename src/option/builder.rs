@@ -63,6 +63,7 @@ pub struct BSOptionBuilder {
 }
 
 impl BSOptionBuilder {
+    /// Create a `BSOptionBuilder` instance.
     pub fn new() -> BSOptionBuilder {
         BSOptionBuilder {
             payout_rate: 0.0,
@@ -70,6 +71,7 @@ impl BSOptionBuilder {
         }
     }
 
+    /// Set the option's asset price.
     pub fn with_asset_price(self, asset_price: f64) -> BSOptionBuilder {
         BSOptionBuilder {
             asset_price: Some(asset_price),
@@ -77,6 +79,7 @@ impl BSOptionBuilder {
         }
     }
 
+    /// Set the option's strike price.
     pub fn with_strike(self, strike: f64) -> BSOptionBuilder {
         BSOptionBuilder {
             strike: Some(strike),
@@ -84,6 +87,11 @@ impl BSOptionBuilder {
         }
     }
 
+    /// Set the time at which option calculations will be based.
+    ///
+    /// **Argument**:
+    ///
+    /// - `time_curr`: a timestamp, in seconds.
     pub fn with_current_time(self, time_curr: u32) -> BSOptionBuilder {
         match self.time_maturity {
             Some(time_maturity) => BSOptionBuilder {
@@ -101,6 +109,11 @@ impl BSOptionBuilder {
         }
     }
 
+    /// Set the option's maturity time.
+    ///
+    /// **Argument**:
+    ///
+    /// - `time_maturity`: a timestamp, in seconds.
     pub fn with_maturity_time(self, time_maturity: u32) -> BSOptionBuilder {
         match self.time_curr {
             Some(time_curr) => BSOptionBuilder {
@@ -118,6 +131,7 @@ impl BSOptionBuilder {
         }
     }
 
+    /// Set a volatility that will be used for option calculation.
     pub fn with_volatility(self, volatility: f64) -> BSOptionBuilder {
         BSOptionBuilder {
             volatility: Some(volatility),
@@ -125,6 +139,7 @@ impl BSOptionBuilder {
         }
     }
 
+    /// Set an interest rate that will be used for option calculation.
     pub fn with_interest(self, interest: f64) -> BSOptionBuilder {
         BSOptionBuilder {
             interest: Some(interest),
@@ -132,6 +147,8 @@ impl BSOptionBuilder {
         }
     }
 
+    /// Set a payout rate that will be used for option calculation.
+    /// This setting is optional.
     pub fn with_payout_rate(self, payout_rate: f64) -> BSOptionBuilder {
         BSOptionBuilder {
             payout_rate,
@@ -139,6 +156,8 @@ impl BSOptionBuilder {
         }
     }
 
+    /// Returns a `BSOption` if all required build steps are called, or
+    /// an `OptionMissingBuildStepError`.
     pub fn finalize(self) -> Result<BSOption, OptionMissingBuildStepError> {
         match self {
             BSOptionBuilder {
