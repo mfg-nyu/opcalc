@@ -1,4 +1,4 @@
-//! Implements a Builder to create `BSOption` more conveniently.
+//! Use a builder to create `BSOption` more conveniently.
 
 use crate::option::{BSOption, OptionTimeDefinition};
 use std::fmt;
