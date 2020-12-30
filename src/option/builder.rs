@@ -223,6 +223,12 @@ impl BSOptionBuilder {
     }
 }
 
+/// `BSOption` builder for JavaScript.
+///
+/// # Usage
+///
+/// Call function `create_option()` instead of invoking `WasmBSOptionBuilder`
+/// directly.
 #[wasm_bindgen]
 #[derive(Default)]
 pub struct WasmBSOptionBuilder {
@@ -237,7 +243,7 @@ pub struct WasmBSOptionBuilder {
 /// bindings. To use a builder to create an option in Rust,
 /// see `BSOptionBuilder`.
 ///
-/// ## Using in JS
+/// # Usage in JavaScript
 ///
 /// ```javascript
 /// // import opcalc here
@@ -262,47 +268,68 @@ pub fn create_option() -> WasmBSOptionBuilder {
 
 #[wasm_bindgen]
 impl WasmBSOptionBuilder {
+    /// Create a `WasmBSOptionBuilder` instance.
+    /// Prefer using `create_option()` over this method.
     pub fn new() -> WasmBSOptionBuilder {
         WasmBSOptionBuilder {
             _inner_builder: BSOptionBuilder::new(),
         }
     }
 
+    /// Set the option's asset price.
     pub fn with_asset_price(mut self, asset_price: f64) -> WasmBSOptionBuilder {
         self._inner_builder = self._inner_builder.with_asset_price(asset_price);
         self
     }
 
+    /// Set the option's strike price.
     pub fn with_strike(mut self, strike: f64) -> WasmBSOptionBuilder {
         self._inner_builder = self._inner_builder.with_strike(strike);
         self
     }
 
+    /// Set the time at which option calculations will be based.
+    ///
+    /// **Argument**:
+    ///
+    /// - `time_curr`: a timestamp, in seconds.
     pub fn with_current_time(mut self, time_curr: u32) -> WasmBSOptionBuilder {
         self._inner_builder = self._inner_builder.with_current_time(time_curr);
         self
     }
 
+    /// Set the option's maturity time.
+    ///
+    /// **Argument**:
+    ///
+    /// - `time_maturity`: a timestamp, in seconds.
     pub fn with_maturity_time(mut self, time_maturity: u32) -> WasmBSOptionBuilder {
         self._inner_builder = self._inner_builder.with_maturity_time(time_maturity);
         self
     }
 
+    /// Set a volatility that will be used for option calculation.
     pub fn with_volatility(mut self, volatility: f64) -> WasmBSOptionBuilder {
         self._inner_builder = self._inner_builder.with_volatility(volatility);
         self
     }
 
+    /// Set an interest rate that will be used for option calculation.
     pub fn with_interest(mut self, interest: f64) -> WasmBSOptionBuilder {
         self._inner_builder = self._inner_builder.with_interest(interest);
         self
     }
 
+    /// Set a payout rate that will be used for option calculation.
+    /// This setting is optional.
     pub fn with_payout_rate(mut self, payout_rate: f64) -> WasmBSOptionBuilder {
         self._inner_builder = self._inner_builder.with_payout_rate(payout_rate);
         self
     }
 
+    /// Returns a `BSOption` if all required build steps are taken.
+    ///
+    /// Throws an error if some required build steps are missing.
     pub fn finalize(self) -> Result<BSOption, JsValue> {
         match self._inner_builder.finalize() {
             Ok(option) => Ok(option),
