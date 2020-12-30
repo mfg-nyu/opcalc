@@ -1,5 +1,7 @@
 //! Library to perform calculations based on a financial option.
 
+#![deny(missing_docs)]
+
 extern crate approx;
 extern crate statrs;
 extern crate web_sys;
