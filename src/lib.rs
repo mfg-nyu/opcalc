@@ -1,3 +1,5 @@
+//! Library to perform calculations based on a financial option.
+
 extern crate approx;
 extern crate statrs;
 extern crate web_sys;
