@@ -1,3 +1,5 @@
+//! Option calculation based on Black-Scholes.
+
 pub mod builder;
 mod opcalc;
 
@@ -6,11 +8,16 @@ use crate::utils;
 use statrs::distribution::{Normal, Univariate};
 use wasm_bindgen::prelude::*;
 
+/// An enumeration of the different supported option types.
 pub enum OptionType {
+    /// A call option.
     Call,
+    /// A put option.
     Put,
 }
 
+/// Specifies the two timestamps required for option calculation:
+/// option maturity as well as the current time.
 #[wasm_bindgen]
 pub struct OptionTimeDefinition {
     time_curr: u32,
