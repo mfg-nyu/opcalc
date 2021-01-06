@@ -59,3 +59,7 @@ let option = BSOptionBuilder::new()
 // then, use this option to obtain calculation results
 let gamma = option.call_gamma();
 ```
+
+## Contributing
+
+Want to contribute? See our [guide to contributing]('./CONTRIBUTING.md').
