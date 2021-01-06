@@ -1,5 +1,9 @@
 # Opcalc example -- React
 
+<p align="center">
+  <img alt="animated site gif" src="https://media.giphy.com/media/Wbw8iXPSPdCW5lgOOo/giphy.gif" />
+</p>
+
 ## Getting started
 
 This project is bootstrapped with Create React APP, with TypeScript configured.
