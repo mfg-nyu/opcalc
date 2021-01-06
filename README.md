@@ -1,6 +1,8 @@
 # opcalc
 
-**An easy-to-use black-scholes option calculator. Made for JS, built in Rust.**
+**An easy-to-use black-scholes option calculator. Made for JS, built in Rust.** 
+
+Available on [npm](https://www.npmjs.com/package/opcalc) and [crates.io](https://crates.io/crates/opcalc).
 
 ## Getting started
 
