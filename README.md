@@ -35,7 +35,7 @@ const delta = option.call_delta();
 
 There are multiple examples for using this library in the `/examples` folder.
 
-- [React]('./example/opcalc-example-react/README.md')
+- [React]('https://github.com/mfg-nyu/opcalc/tree/master/example/opcalc-example-react')
 - Angular (coming soon)
 - Vue.js (coming soon)
 
