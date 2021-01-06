@@ -8,7 +8,7 @@
 
 This project is bootstrapped with Create React APP, with TypeScript configured.
 
-You may find the entire application's source code in `app.tsx`.
+You may find the entire application's source code in [`app.tsx`](./src/App.tsx).
 
 ## Note: wasm support in React
 
