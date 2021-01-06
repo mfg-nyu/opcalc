@@ -35,7 +35,7 @@ const delta = option.call_delta();
 
 There are multiple examples for using this library in the `/examples` folder.
 
-- [React]('https://github.com/mfg-nyu/opcalc/tree/master/example/opcalc-example-react')
+- [React](./example/opcalc-example-react/README.md)
 - Angular (coming soon)
 - Vue.js (coming soon)
 
@@ -62,4 +62,4 @@ let gamma = option.call_gamma();
 
 ## Contributing
 
-Want to contribute? See our [guide to contributing]('./CONTRIBUTING.md').
+Want to contribute? See our [guide to contributing](./CONTRIBUTING.md).
