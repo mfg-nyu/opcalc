@@ -23,3 +23,15 @@ cargo install wasm-pack
 
 This is a known issue in `wasm-pack`.
 See: <https://github.com/rustwasm/wasm-pack/issues/837>.
+
+
+## Local development
+
+During development, it may be helpful to test with a local opcalc build.
+
+To link to a local build, make the following change to the `package.json` you're referring to:
+
+```text
+    // update the relative path accordingly
+    "opcalc": "./../../pkg"
+```
