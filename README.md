@@ -31,6 +31,14 @@ const delta = option.call_delta();
 // ...
 ```
 
+### Examples
+
+There are multiple examples for using this library in the `/examples` folder.
+
+- [React]('./example/opcalc-example-react/README.md')
+- Angular (coming soon)
+- Vue.js (coming soon)
+
 ### Using the library in Rust
 
 Using the library in Rust is similar to the experience in JavaScript.
