@@ -7722,8 +7722,10 @@ onetime@^5.1.0:
   dependencies:
     mimic-fn "^2.1.0"
 
-opcalc@./../../pkg:
-  version "0.1.5"
+opcalc@0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/opcalc/-/opcalc-0.2.1.tgz#09ee6d262c6b88e0fc5a87304e6221501658b556"
+  integrity sha512-90c4qqbF3r4PzHGfqaOAJZ7cYXVhvwgVmNi1G0G+U1+PnOVL/ywvj0pbNBfW8iCTzfS1fSV20Uon5UBFTNFCgA==
 
 open@^7.0.2:
   version "7.3.0"
